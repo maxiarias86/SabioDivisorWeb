@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Deudas</title>
+</head>
+<body>
+<h1>Deudas Registradas</h1>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Email</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="debt : ${debts}">
+        <td th:text="${debt.id}">1</td>
+        <td th:text="'$'${debt.amount}'.-'">monto</td>
+        <td th:text="${debt.debtor}">deudor</td>
+        <td th:text="${debt.creditor}">creditor</td>
+        <td th:text="${debt.expense}">expense</td>
+        <td th:text="${debt.dueDate}">fecha</td>
+        <td th:text="${debt.installmentNumber}">cuota</td>
+
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
