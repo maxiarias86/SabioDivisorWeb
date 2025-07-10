@@ -18,52 +18,59 @@ public class PaymentController {
     private AppUserService userService;
 
     @GetMapping
-    public String list(Model model, @RequestParam(name = "userId") Long id) {
-        model.addAttribute("payments", service.findAllByUserId(id));
+    public String list(Model model, @RequestParam(name = "userId") Long userId) {//Se usa @RequestParam para recibir el ID del usuario desde la URL o un formulario
+        model.addAttribute("payments", service.findAllByUserId(userId));
         return "payments/list"; // Esto apunta a la vista Thymeleaf en src/main/resources/templates/payments/list.html
     }
 
     @GetMapping("/new")
-    public String add(Model model) {
+    public String add(Model model, @RequestParam(name = "userId") Long userId) {
         model.addAttribute("payment", new Payment());
         model.addAttribute("users", userService.listAll()); // Para mostrar los usuarios en el formulario
+        model.addAttribute("userId", userId); // Para mantener el ID del usuario en el formulario
         return "payments/form"; // Esto apunta a la vista Thymeleaf en src/main/resources/templates/payments/form.html
     }
 
-    @GetMapping("/edit/{id}")
-    public String edit(Model model, @PathVariable Long id) {
-        model.addAttribute("payment", service.findById(id));
+    @GetMapping("/edit/{paymentId}")//El id es parte de la ruta de la URL, por lo que se usa @PathVariable
+    public String edit(Model model, @PathVariable Long paymentId, @RequestParam(name = "userId") Long userId) {//Se usa @PathVariable para recibir el ID del pago como parte de la URL
+        model.addAttribute("payment", service.findById(paymentId));
         model.addAttribute("users", userService.listAll()); // Para mostrar los usuarios en el formulario
+        model.addAttribute("userId", userId); // Para mantener el ID del usuario en el formulario
         return "payments/form";
     }
 
     @PostMapping("/save")
-    public String save(Model model, Payment payment, @RequestParam Long userId) {
+    public String save(Model model, Payment payment, @RequestParam(name = "userId") Long userId) {
         //Validaciones del formulario en la capa Controller
         if (payment.getAmount() <= 0) {
             model.addAttribute("error", "El monto del pago debe ser mayor a cero.");
             model.addAttribute("users", userService.listAll());
+            model.addAttribute("userId", userId); // Para mantener el ID del usuario en el formulario
             return "payments/form"; // Retorna al formulario si hay un error de validación
         }
         if (payment.getPayer().getId().equals(payment.getRecipient().getId())) {
             model.addAttribute("error", "El pagador no puede ser el mismo que el destinatario.");
             model.addAttribute("users", userService.listAll());
+            model.addAttribute("userId", userId); // Para mantener el ID del usuario en el formulario
+
             return "payments/form"; // Retorna al formulario si hay un error de validación
         }
         if (!payment.getPayer().getId().equals(userId) && !payment.getRecipient().getId().equals(userId)) {
             model.addAttribute("error", "No puedes agregar pagos en los que no participes.");
             model.addAttribute("users", userService.listAll());
+            model.addAttribute("userId", userId); // Para mantener el ID del usuario en el formulario
+
             model.addAttribute("payment", payment);
             return "payments/form"; // Retorna al formulario si hay un error de validación
         }
 
         service.save(payment);
-        return "redirect:/payments"; // Redirige a la lista de pagos después de guardar
+        return "redirect:/payments?userId=" + userId;// Redirige a la lista de pagos después de guardar con el id de usuario como @RequestParam
     }
 
-    @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id) {
-        service.delete(id);
-        return "redirect:/payments"; // Redirige a la lista de pagos después de eliminar
+    @GetMapping("/delete/{paymentId}")
+    public String delete(@PathVariable Long paymentId, @RequestParam(name = "userId") Long userId) {
+        service.delete(paymentId);
+        return "redirect:/payments?userId=" + userId;// Redirige a la lista de pagos después de guardar con el id de usuario como @RequestParam
     }
 }
