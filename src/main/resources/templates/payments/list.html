@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Pagos</title>
+</head>
+<body>
+<h1>Pagos Registrados</h1>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Monto</th>
+        <th>Pagador</th>
+        <th>Receptor</th>
+        <th>Fecha</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="payment : ${payments}">
+        <td th:text="${payment.id}">1</td>
+        <td th:text="'$' + ${payment.amount} + '.-'">monto</td>
+        <td th:text="${payment.payer.name}">Pagador</td>
+        <td th:text="${payment.recipient.name}">Receptor</td>
+        <td th:text="${payment.date}">Fecha</td>
+        <td>
+            <a th:href="@{'/payments/edit/' + ${payment.id} + '?userId=' + ${userId}}">Editar</a> |
+            <a th:href="@{'/payments/delete/' + ${payment.id} + '?userId=' + ${userId}}"
+               onclick="return confirm('¿Estás seguro de que querés eliminar este pago?')">Eliminar</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<br>
+<a th:href="@{'/payments/new?userId=' + ${userId}}">Registrar nuevo pago</a>
+
+</body>
+</html>
