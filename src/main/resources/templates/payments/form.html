@@ -37,7 +37,7 @@
         <label for="payer">Pagador:</label>
         <select id="payer" th:field="*{payer}" required>
             <option value="" disabled>Seleccionar</option>
-            <option th:each="user : ${users}" th:value="${user}" th:text="${user.name}"></option>
+            <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}"></option>
         </select>
     </div>
 
@@ -46,7 +46,7 @@
         <label for="recipient">Receptor:</label>
         <select id="recipient" th:field="*{recipient}" required>
             <option value="" disabled>Seleccionar</option>
-            <option th:each="user : ${users}" th:value="${user}" th:text="${user.name}"></option>
+            <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}"></option>
         </select>
     </div>
 
