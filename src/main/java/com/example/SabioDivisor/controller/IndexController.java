@@ -17,6 +17,7 @@ public class IndexController {
 
     @GetMapping("/index")
     public String index(HttpSession session, Model model) {
+        //ELIMINAR EL SYSO ANTES DE ENTREGAR
         System.out.println("Entrando al index");
         AppUser user = (AppUser) session.getAttribute("loggedUser");
         if (user == null) {

@@ -32,8 +32,10 @@ import java.util.List;
 
         List<AppUser> findByName(String name);
 
+        AppUser findByEmail(String email);
+
         //Cómo hacer una Query personalizada:
-        @Query("SELECT u FROM AppUser u WHERE u.email != :id")
+        @Query("SELECT u FROM AppUser u WHERE u.id != :id")
         List<AppUser> findAllButOne(@Param("id") Long id);
 
     }

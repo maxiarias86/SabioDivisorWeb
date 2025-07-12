@@ -9,16 +9,13 @@
 <h1 th:text="${payment.id == null} ? 'Nuevo Pago' : 'Editar Pago'">Formulario de Pago</h1>
 
 <!-- Muestra el error si hay -->
-<div th:if="${error}" style="color: red;">
+<div th:if="${error}">
     <p th:text="${error}"></p>
 </div>
 
 <form th:action="@{/payments/save}" th:object="${payment}" method="post">
     <!-- ID del pago (oculto) -->
     <input type="hidden" th:field="*{id}" />
-
-    <!-- ID del usuario logueado (oculto) -->
-    <input type="hidden" name="userId" th:value="${userId}" />
 
     <!-- Monto -->
     <div>

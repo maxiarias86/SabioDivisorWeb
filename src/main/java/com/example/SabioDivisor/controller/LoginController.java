@@ -28,7 +28,7 @@ public class LoginController {
          */
         AppUser user = userService.validateCredentials(email, password);
         if (user == null) {
-            model.addAttribute("message", "email o contraseña incorrectos");
+            model.addAttribute("error", "email o contraseña incorrectos");
             return "login";//Si las credenciales son incorrectas, se muestra el mensaje de error y se vuelve al formulario de inicio de sesión.
         }
         session.setAttribute("loggedUser", user);

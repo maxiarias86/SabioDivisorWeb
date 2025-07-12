@@ -19,27 +19,25 @@ public class AppUserService {
     }
 
     public AppUser save(AppUser appUser) {
+        // Siempre encripta la contraseña, incluso si ya está encriptada. Por eso debe validar antes de llamar a este metodo.
         String hashedPassword = BCrypt.withDefaults().hashToString(10, appUser.getPassword().toCharArray());
         appUser.setPassword(hashedPassword);
         return repository.save(appUser);
     }
 
+    /*
+    No se van a poder eliminar usuarios.
     public void delete(Long id) {
         repository.deleteById(id);
     }
+     */
 
     public AppUser findById(Long id) {
         return repository.findById(id).orElse(null);
     }
 
     public AppUser findByEmail(String email) {
-        List<AppUser> users = repository.findAll();
-        for (AppUser u : users) {
-            if (u.getEmail().equalsIgnoreCase(email)) {
-                return u;
-            }
-        }
-        return null;
+        return repository.findByEmail(email);
     }
 
     public AppUser validateCredentials(String email, String password) {

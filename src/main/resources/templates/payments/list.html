@@ -26,8 +26,8 @@
         <td th:text="${payment.recipient.name}">Receptor</td>
         <td th:text="${payment.date}">Fecha</td>
         <td>
-            <a th:href="@{'/payments/edit/' + ${payment.id} + '?userId=' + ${userId}}">Editar</a> |
-            <a th:href="@{'/payments/delete/' + ${payment.id} + '?userId=' + ${userId}}"
+            <a th:href="@{'/payments/edit/' + ${payment.id}}">Editar</a> |
+            <a th:href="@{'/payments/delete/' + ${payment.id}}"
                onclick="return confirm('¿Estás seguro de que querés eliminar este pago?')">Eliminar</a>
         </td>
     </tr>
@@ -35,7 +35,7 @@
 </table>
 
 <br>
-<a th:href="@{'/payments/new?userId=' + ${userId}}">Registrar nuevo pago</a>
+<a th:href="@{/payments/new}">Registrar nuevo pago</a>
 
 </body>
 </html>

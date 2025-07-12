@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)//Estrategia JOINED: crea tabla para Transaction y una por cada subclase, unidas por ID.
-@DiscriminatorColumn(name = "transaction_type")//Columna que indica el tipo real (Payment, Expense, etc.)
+@DiscriminatorColumn(name = "transaction_type")//Columna que indica el tipo de transacción (Payment o Expense).
 
 public abstract class Transaction {
     @Id
@@ -46,4 +46,14 @@ public abstract class Transaction {
     public void setDate(LocalDate date) {
         this.date = date;
     }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", amount=" + amount +
+                ", date=" + date +
+                '}';
+    }
+
 }

@@ -48,4 +48,15 @@ public class Payment extends Transaction {
     public void setRecipient(AppUser recipient) {
         this.recipient = recipient;
     }
+
+    @Override
+    public String toString() {
+        return "Payment{" +
+                "id=" + getId() +
+                ", amount=" + getAmount() +
+                ", date=" + getDate() +
+                ", payer=" + payer.getName() +
+                ", recipient=" + recipient.getName() +
+                '}';
+    }
 }

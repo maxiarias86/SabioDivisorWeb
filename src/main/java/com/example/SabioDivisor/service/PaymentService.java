@@ -20,7 +20,7 @@ public class PaymentService {
     public Payment findById(Long id) {
         return repository.findById(id).orElse(null);
     }
-
+//AGREGAR VALIDACIONES PARA QUE NO SE PUEDA GUARDAR UN PAGO NULO. AUNQUE YA SE HAYA HECHO EN EL CONTROLLER
     public Payment save(Payment payment) {
         return repository.save(payment);
     }

@@ -41,22 +41,14 @@ public class AppUserController {
         return "redirect:/users"; // Redirige a la lista de usuarios después de guardar
     }
 
+    /*
+    No se puede eliminar usuarios.
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
         service.delete(id);
         return "redirect:/users"; // Redirige a la lista de usuarios después de eliminar
     }
 
-    @GetMapping("/index")
-    public String index(HttpSession session, Model model) {
-        System.out.println("Entrando al index");
-        AppUser user = (AppUser) session.getAttribute("loggedUser");// Obtiene el usuario logueado de la sesión
-        if (user == null) {// Si no hay un usuario logueado, redirige al formulario de inicio de sesión
-            return "redirect:/login";
-        }
-        model.addAttribute("user", user);// Agrega el usuario logueado al modelo para que esté disponible en la vista
-        return "index";// Retorna al index.
-    }
-
+     */
 
 }

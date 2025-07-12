@@ -6,8 +6,8 @@
 </head>
 <body>
 <h1>Iniciar Sesión</h1>
-<div th:if="${message}">
-    <p th:text="${message}"></p>
+<div th:if="${error}">
+    <p th:text="${error}"></p>
 </div>
 
 <form th:action="@{/login}" method="post">
