@@ -73,4 +73,6 @@ public class PaymentController {
         service.delete(paymentId);
         return "redirect:/payments?userId=" + userId;// Redirige a la lista de pagos después de guardar con el id de usuario como @RequestParam
     }
+
 }
+

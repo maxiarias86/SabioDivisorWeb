@@ -2,6 +2,7 @@ package com.example.SabioDivisor.controller;
 
 import com.example.SabioDivisor.model.AppUser;
 import com.example.SabioDivisor.service.AppUserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,4 +46,17 @@ public class AppUserController {
         service.delete(id);
         return "redirect:/users"; // Redirige a la lista de usuarios después de eliminar
     }
+
+    @GetMapping("/index")
+    public String index(HttpSession session, Model model) {
+        System.out.println("Entrando al index");
+        AppUser user = (AppUser) session.getAttribute("loggedUser");// Obtiene el usuario logueado de la sesión
+        if (user == null) {// Si no hay un usuario logueado, redirige al formulario de inicio de sesión
+            return "redirect:/login";
+        }
+        model.addAttribute("user", user);// Agrega el usuario logueado al modelo para que esté disponible en la vista
+        return "index";// Retorna al index.
+    }
+
+
 }

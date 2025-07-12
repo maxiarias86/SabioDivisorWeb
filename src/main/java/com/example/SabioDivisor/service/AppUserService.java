@@ -52,9 +52,6 @@ public class AppUserService {
         return null;
     }
 
-
-
-
     public boolean checkPassword(String plainPassword, String hashedPassword) {
         return BCrypt.verifyer()
                 .verify(plainPassword.toCharArray(), hashedPassword)
