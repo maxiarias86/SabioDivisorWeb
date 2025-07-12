@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nuevo Gasto</title>
+</head>
+<body>
+<h1>Registrar nuevo gasto</h1>
+
+<!-- Mostrar error si lo hay -->
+<div th:if="${error}">
+    <p th:text="${error}"></p>
+</div>
+
+<form th:action="@{/expenses/save}" method="post">
+    <label>Monto total:</label>
+    <input type="number" step="0.01" name="amount" th:value="${expense.amount}" required><br><br>
+
+    <label>Descripción:</label>
+    <input type="text" name="description" th:value="${expense.description}" required><br><br>
+
+    <label>Fecha:</label>
+    <input type="date" name="date" th:value="${expense.date}" required><br><br>
+
+    <label>Cuotas:</label>
+    <input type="number" name="installments" min="1" th:value="${expense.installments}" required><br><br>
+
+    <h3>Pagadores</h3>
+    <table border="1">
+        <tr>
+            <th>Usuario</th>
+            <th>Monto que pagó</th>
+        </tr>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.name}"></td>
+            <td>
+                <input type="number" step="0.01" min="0"
+                       th:name="'payer_' + ${user.id}" />
+            </td>
+        </tr>
+    </table>
+
+    <h3>Deudores</h3>
+    <table border="1">
+        <tr>
+            <th>Usuario</th>
+            <th>Monto que debe</th>
+        </tr>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.name}"></td>
+            <td>
+                <input type="number" step="0.01" min="0"
+                       th:name="'debtor_' + ${user.id}" />
+            </td>
+        </tr>
+    </table>
+
+    <br>
+    <button type="submit">Guardar gasto</button>
+</form>
+
+</body>
+</html>

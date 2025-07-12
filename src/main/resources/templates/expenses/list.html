@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Lista de Gastos</title>
+</head>
+<body>
+<h1>Mis Gastos</h1>
+
+<a th:href="@{/expenses/new}">+ Nuevo gasto</a>
+
+<table border="1">
+  <thead>
+  <tr>
+    <th>Descripción</th>
+    <th>Monto</th>
+    <th>Cuotas</th>
+    <th>Fecha</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:if="${expenses.size() == 0}">
+    <td colspan="4">No hay gastos registrados.</td>
+  </tr>
+
+  <tr th:each="expense : ${expenses}">
+    <td th:text="${expense.description}"></td>
+    <td th:text="${expense.amount}"></td>
+    <td th:text="${expense.installments}"></td>
+    <td th:text="${expense.date}"></td>
+  </tr>
+  </tbody>
+</table>
+
+</body>
+</html>
