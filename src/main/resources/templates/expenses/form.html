@@ -1,18 +1,6 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Nuevo Gasto</title>
-</head>
-<body>
-<h1>Registrar nuevo gasto</h1>
-
-<!-- Mostrar error si lo hay -->
-<div th:if="${error}">
-    <p th:text="${error}"></p>
-</div>
-
 <form th:action="@{/expenses/save}" method="post">
+    <input type="hidden" name="id" th:value="${expense.id}" />
+
     <label>Monto total:</label>
     <input type="number" step="0.01" name="amount" th:value="${expense.amount}" required><br><br>
 
@@ -35,7 +23,8 @@
             <td th:text="${user.name}"></td>
             <td>
                 <input type="number" step="0.01" min="0"
-                       th:name="'payer_' + ${user.id}" />
+                       th:name="'payer_' + ${user.id}"
+                       th:value="${payers[user.id]}" />
             </td>
         </tr>
     </table>
@@ -50,7 +39,8 @@
             <td th:text="${user.name}"></td>
             <td>
                 <input type="number" step="0.01" min="0"
-                       th:name="'debtor_' + ${user.id}" />
+                       th:name="'debtor_' + ${user.id}"
+                       th:value="${debtors[user.id]}" />
             </td>
         </tr>
     </table>
@@ -58,6 +48,3 @@
     <br>
     <button type="submit">Guardar gasto</button>
 </form>
-
-</body>
-</html>

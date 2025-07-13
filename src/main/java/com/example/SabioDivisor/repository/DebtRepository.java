@@ -8,6 +8,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 public interface DebtRepository extends JpaRepository<Debt, Long> {
 
@@ -22,6 +24,8 @@ public interface DebtRepository extends JpaRepository<Debt, Long> {
             "SELECT COUNT(d) FROM Debt d WHERE d.expense.id = :expenseId AND (d.debtor.id = :userId OR d.creditor.id = :userId)"
     )
     Long countByExpenseId(@Param("expenseId") Long expenseId,@Param("userId") Long userId);//cuenta si el usuario participó en al menos una deuda asociada al gasto.
+
+    List<Debt> findAllByExpenseId(Long expenseId);
 
 /*
         Key Default Methods:

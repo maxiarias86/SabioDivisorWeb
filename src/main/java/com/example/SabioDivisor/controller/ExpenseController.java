@@ -1,6 +1,7 @@
 package com.example.SabioDivisor.controller;
 
 import com.example.SabioDivisor.model.AppUser;
+import com.example.SabioDivisor.model.Debt;
 import com.example.SabioDivisor.model.Expense;
 import com.example.SabioDivisor.service.AppUserService;
 import com.example.SabioDivisor.service.ExpenseService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -94,6 +96,7 @@ public class ExpenseController {
         }
 
         Expense expense = expenseService.findById(id);
+
         //VALIDACIONES: Si el gasto no existe o si el usuario no participó en el gasto, se muestra un mensaje de error y se redirige a la lista de gastos.
         if (expense == null) {
             model.addAttribute("error", "Gasto no encontrado.");
@@ -105,10 +108,25 @@ public class ExpenseController {
             model.addAttribute("expenses", expenseService.findAllByUser(loggedUser));
             return "expenses/list";
         }
-
         //CONTINUA EL FLUJO
+
+        //AGREGA LAS DEUDAS Y PAGOS AL GASTO PARA QUE SE MUESTREN EN EL FORMULARIO DE EDICIÓN.
+        Map<Long, Double> payers = new HashMap<>();
+        Map<Long, Double> debtors = new HashMap<>();
+        List<Debt> debts = expenseService.findDebtsByExpenseId(expense.getId());
+
+        for (Debt debt : debts) {
+            Long creditorId = debt.getCreditor().getId();
+            Long debtorId = debt.getDebtor().getId();
+
+            payers.put(creditorId, (payers.getOrDefault(creditorId,0.0) + debt.getAmount()));// Si hay mas de una cuota el getOrDefault va a traer el monto de la iteración previa y acumula el de la nueva cuota, si es la primera o la ultima trae el default (0.0).
+            debtors.put(debtorId, (debtors.getOrDefault(debtorId,0.0) + debt.getAmount()));// Lo mismo que arriba, pero para los deudores.
+        }
+
         model.addAttribute("expense", expense);
         model.addAttribute("users", appUserService.listAll());
+        model.addAttribute("payers", payers);
+        model.addAttribute("debtors", debtors);
         return "expenses/form";
     }
 
