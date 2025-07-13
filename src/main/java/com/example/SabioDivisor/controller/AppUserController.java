@@ -29,9 +29,13 @@ public class AppUserController {
         return "users/form"; // Esto apunta a la vista Thymeleaf en src/main/resources/templates/users/form.html
     }
 
-    @GetMapping("/edit/{id}")
-    public String edit(Model model, @PathVariable Long id) {
-        model.addAttribute("user", service.findById(id));
+    @GetMapping("/edit")
+    public String edit(Model model, HttpSession session) {
+        AppUser loggedUser = (AppUser) session.getAttribute("loggedUser");
+        if (loggedUser == null) {
+            return "redirect:/login"; // Redirige al login si no hay usuario logueado
+        }
+        model.addAttribute("user", service.findById(loggedUser.getId()));
         return "users/form";
     }
 
@@ -49,6 +53,11 @@ public class AppUserController {
         return "redirect:/users"; // Redirige a la lista de usuarios después de eliminar
     }
 
-     */
+    @GetMapping("/edit/{id}")
+    public String edit(Model model, @PathVariable Long id) {
+        model.addAttribute("user", service.findById(id));
+        return "users/form";
+    }
+ */
 
 }

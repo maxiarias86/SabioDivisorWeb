@@ -28,6 +28,10 @@ public class ExpenseService {
     @Autowired
     private AppUserRepository userRepository;
 
+    public Expense findById(Long id) {
+        return expenseRepository.findById(id).orElse(null);
+    }
+
     @Transactional//Actua de forma similar al commit false de los DAO. Si no se completa toda la transaccion a la base de datos no se carga la Expense (Por ejemplo si hay un error en la carga de las Debt).
     public Expense save(Expense expense, Map<Long, Double> payers, Map<Long, Double> debtors) {
 
@@ -53,6 +57,7 @@ public class ExpenseService {
         }
 
         Expense savedExpense = expenseRepository.save(expense);//Guarda el Expense y devuelve el objeto guardado con el ID generado que luego va a relacionar a las Debt.
+        debtRepository.deleteByExpenseId(savedExpense.getId());//Elimina las deudas asociadas al gasto si es una edición, sino la query delete no va a hacer nada.
 
         Map<Long, AppUser> users = new HashMap<>();//Armado de un HashMap con todos los usuarios que participan.
         //Este paso junta todos los AppUser que participan del gasto y los guarda en un Map<Long, AppUser> para poder acceder a ellos por ID después.
@@ -140,6 +145,24 @@ public class ExpenseService {
         La base de datos queda como estaba. Es como el conn.rollback() de la app de escritorio (DAO).
         */
     return savedExpense;
+    }
+
+    public List<Expense> findAllByUser(AppUser user) {
+        if (user == null || user.getId() == null) {
+            return new ArrayList<>(); // Retorna una lista vacía si el usuario es nulo o no tiene ID
+        }
+        return expenseRepository.findAllByUserId(user.getId());
+    }
+
+    public void delete(Long id) {
+        expenseRepository.deleteById(id);
+    }
+
+    public boolean userParticipatedInExpense(AppUser user, Long expenseId) {
+        if (user == null || user.getId() == null) {
+            return false; // Retorna false si el usuario es nulo o no tiene ID
+        }
+        return debtRepository.countByExpenseId(expenseId, user.getId()) > 0;
     }
 
 }

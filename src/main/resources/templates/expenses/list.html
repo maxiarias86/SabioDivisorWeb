@@ -6,6 +6,13 @@
 </head>
 <body>
 <h1>Mis Gastos</h1>
+<div th:if="${success}">
+  <p th:text="${success}"></p>
+</div>
+<div th:if="${error}">
+  <p th:text="${error}"></p>
+</div>
+
 
 <a th:href="@{/expenses/new}">+ Nuevo gasto</a>
 
@@ -28,6 +35,10 @@
     <td th:text="${expense.amount}"></td>
     <td th:text="${expense.installments}"></td>
     <td th:text="${expense.date}"></td>
+    <td>
+      <a th:href="@{'/expenses/edit/' + ${expense.id}}">Editar</a> |
+      <a th:href="@{'/expenses/delete/' + ${expense.id}}" onclick="return confirm('¿Estás seguro que querés eliminar este gasto?')">Eliminar</a>
+    </td>
   </tr>
   </tbody>
 </table>

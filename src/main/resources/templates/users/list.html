@@ -6,6 +6,10 @@
 </head>
 <body>
 <h1>Usuarios Registrados</h1>
+<div th:if="${session.loggedUser == null}" >
+    <p>Esta View puede ser vista incluso sin estar logueado para poder hacer pruebas</p>
+    <p>Todas las contraseñas entan encriptadas pero son 1234</p>
+</div>
 
 <table border="1">
     <thead>
@@ -22,6 +26,14 @@
         <td th:text="${user.email}">email@ejemplo.com</td>
     </tr>
     </tbody>
+
+    <div th:if="${session.loggedUser != null}">
+        <ul>
+            <li><a href="/users/edit">Editar Usuario</a></li>
+            <li><a href="/logout">Cerrar sesión</a></li>
+        </ul>
+    </div>
+
 </table>
 </body>
 </html>

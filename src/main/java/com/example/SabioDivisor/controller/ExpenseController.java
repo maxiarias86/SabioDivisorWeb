@@ -30,9 +30,7 @@ public class ExpenseController {
         if (loggedUser == null) {//Si el usuario no esta logueado vuelve al login
             return "redirect:/login";
         }
-
-        //CREAR EL METODO QUE DEVUELVE TODOS LOS EXPENSES DEL USUARIO LOGUEADO
-        model.addAttribute("expenses",new ArrayList<>());
+        model.addAttribute("expenses",expenseService.findAllByUser(loggedUser));
         return "expenses/list";
     }
 
@@ -86,6 +84,54 @@ public class ExpenseController {
             model.addAttribute("users", appUserService.listAll());
             return "expenses/form";
         }
+    }
+
+    @GetMapping("/edit/{id}")
+    public String editExpense(Model model, HttpSession session, @PathVariable Long id) {
+        AppUser loggedUser = (AppUser) session.getAttribute("loggedUser");
+        if (loggedUser == null) {
+            return "redirect:/login";
+        }
+
+        Expense expense = expenseService.findById(id);
+        //VALIDACIONES: Si el gasto no existe o si el usuario no participó en el gasto, se muestra un mensaje de error y se redirige a la lista de gastos.
+        if (expense == null) {
+            model.addAttribute("error", "Gasto no encontrado.");
+            model.addAttribute("expenses", expenseService.findAllByUser(loggedUser));
+            return "expenses/list";
+        }
+        if(!expenseService.userParticipatedInExpense(loggedUser, expense.getId())) {
+            model.addAttribute("error", "No puedes editar un gasto en el que no participaste.");
+            model.addAttribute("expenses", expenseService.findAllByUser(loggedUser));
+            return "expenses/list";
+        }
+
+        //CONTINUA EL FLUJO
+        model.addAttribute("expense", expense);
+        model.addAttribute("users", appUserService.listAll());
+        return "expenses/form";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(Model model,@PathVariable Long id, HttpSession session) {
+        AppUser loggedUser = (AppUser) session.getAttribute("loggedUser");
+        if (loggedUser == null) {
+            return "redirect:/login";
+        }
+        Expense expense = expenseService.findById(id);
+        if (expense != null) {
+            if(expenseService.userParticipatedInExpense(loggedUser, expense.getId())) {
+                expenseService.delete(expense.getId());
+                model.addAttribute("success", "Gasto eliminado correctamente.");
+
+            } else {
+                model.addAttribute("error", "No puedes eliminar un gasto en el que no participaste.");
+            }
+        } else {
+            model.addAttribute("error", "Gasto no encontrado.");
+        }
+        model.addAttribute("expenses", expenseService.findAllByUser(loggedUser));
+        return "expenses/list";
     }
 
 }
