@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -26,6 +27,14 @@ public interface DebtRepository extends JpaRepository<Debt, Long> {
     Long countByExpenseId(@Param("expenseId") Long expenseId,@Param("userId") Long userId);//cuenta si el usuario participó en al menos una deuda asociada al gasto.
 
     List<Debt> findAllByExpenseId(Long expenseId);
+
+    @Query(
+            "SELECT d FROM Debt d " +
+                    "WHERE ((d.debtor.id = :userId AND d.creditor.id = :friendId) " +
+                    "OR (d.debtor.id = :friendId AND d.creditor.id = :userId)) " +
+                    "AND d.expense.date <= :date"
+    )
+    List<Debt> findByPayerOrRecipient(@Param("friendId") Long payerId, @Param("userId") Long recipientId, @Param("date") LocalDate date);
 
 /*
         Key Default Methods:

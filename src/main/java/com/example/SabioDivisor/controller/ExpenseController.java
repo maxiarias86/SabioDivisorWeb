@@ -63,10 +63,9 @@ public class ExpenseController {
         if (loggedUser == null) {
             return "redirect:/login";
         }
+        Map<Long,Double> payers = new HashMap<>();
+        Map<Long,Double> debtors = new HashMap<>();
         try{
-            Map<Long,Double> payers = new HashMap<>();
-            Map<Long,Double> debtors = new HashMap<>();
-
             for (String key : params.keySet()) {//Recorre todos los parámetros del formulario para buscar claves que empiecen con: "payer_": representa un pagador. "debtor_": representa un deudor.
                 if (key.startsWith("payer_")) {
                     Long id = Long.parseLong(key.substring(6));//El id es lo que le sigue al sexto caracter (luego de "payer_")
@@ -89,6 +88,8 @@ public class ExpenseController {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("expense", expense);
             model.addAttribute("users", appUserService.listAll());
+            model.addAttribute("payers", payers);
+            model.addAttribute("debtors", debtors);
             return "expenses/form";
         }
     }

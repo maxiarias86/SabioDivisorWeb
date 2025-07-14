@@ -11,10 +11,24 @@
 <nav>
   <ul>
     <li><a href="/payments">Pagos</a></li>
+    <li><a href="/expenses">Gastos</a></li>
     <li><a href="/users/edit">Editar Usuario</a></li>
     <li><a href="/logout">Cerrar sesión</a></li>
   </ul>
 </nav>
+
+<form method="get" action="/index">
+  <label>Ver balances hasta:</label>
+  <input type="date" name="date" th:value="${date}">
+  <button type="submit">Actualizar</button>
+</form>
+
+<h2>Mi balance con otros usuarios</h2>
+<ul>
+  <li th:each="balance : ${balances}" th:text="${balance}"></li>
+  <li th:if="${#lists.isEmpty(balances)}">No hay deudas ni pagos con otros usuarios.</li>
+</ul>
+
 
 
 </body>
