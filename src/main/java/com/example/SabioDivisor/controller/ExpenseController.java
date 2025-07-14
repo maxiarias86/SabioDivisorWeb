@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +43,11 @@ public class ExpenseController {
         if (loggedUser == null) {
             return "redirect:/login";
         }
-        model.addAttribute("expense", new Expense());
+        //Agrega los Maps para los pagadores y deudores, porque el html los espera para mostrar los campos de pago y deuda en el caso que sea edicion.
+        model.addAttribute("payers", new HashMap<Long, Double>());
+        model.addAttribute("debtors", new HashMap<Long, Double>());
+
+        model.addAttribute("expense", new Expense());//Crea un nuevo objeto Expense para que el formulario pueda llenarlo.
         model.addAttribute("users",appUserService.listAll());
         return "expenses/form";
     }
@@ -131,25 +136,28 @@ public class ExpenseController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(Model model,@PathVariable Long id, HttpSession session) {
+    public String delete(Model model,@PathVariable Long id, HttpSession session, RedirectAttributes redirectAttributes) {
         AppUser loggedUser = (AppUser) session.getAttribute("loggedUser");
         if (loggedUser == null) {
             return "redirect:/login";
         }
-        Expense expense = expenseService.findById(id);
-        if (expense != null) {
-            if(expenseService.userParticipatedInExpense(loggedUser, expense.getId())) {
-                expenseService.delete(expense.getId());
-                model.addAttribute("success", "Gasto eliminado correctamente.");
 
-            } else {
-                model.addAttribute("error", "No puedes eliminar un gasto en el que no participaste.");
-            }
-        } else {
-            model.addAttribute("error", "Gasto no encontrado.");
+        Expense expense = expenseService.findById(id);
+
+        //VALIDACIONES: Si el gasto no existe o si el usuario no participó en el gasto, se muestra un mensaje de error y se redirige a la lista de gastos.
+        if (expense == null) {
+            redirectAttributes.addFlashAttribute("error", "Gasto no encontrado.");
+            return "redirect:/expenses";
         }
-        model.addAttribute("expenses", expenseService.findAllByUser(loggedUser));
-        return "expenses/list";
+        if(!expenseService.userParticipatedInExpense(loggedUser, expense.getId())) {
+            redirectAttributes.addFlashAttribute("error", "No puedes eliminar un gasto en el que no participaste.");
+            return "redirect:/expenses";
+        }
+        //CONTINUA EL FLUJO
+
+        expenseService.delete(expense.getId());
+        redirectAttributes.addFlashAttribute("success", "Gasto eliminado correctamente.");//redirect.Atributtes.addFlashAttribute: Guarda temporalmente un atributo (ej. "error") y lo pasa al siguiente redirect. Es "flash" porque se elimina después de que se muestra una vez.
+        return "redirect:/expenses";
     }
 
 }

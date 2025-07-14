@@ -159,7 +159,8 @@ public class ExpenseService {
     }
 
     public void delete(Long id) {
-        expenseRepository.deleteById(id);
+        debtRepository.deleteByExpenseId(id);//Primero borra las Debt asociadas.
+        expenseRepository.deleteById(id);//Borra el Expense
     }
 
     public boolean userParticipatedInExpense(AppUser user, Long expenseId) {
