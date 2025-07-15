@@ -54,7 +54,7 @@ public class PaymentController {
     }
 
     @PostMapping("/save")
-    public String save(Model model, Payment payment, HttpSession session) {
+    public String save(Model model, @ModelAttribute Payment payment, HttpSession session) {//@ModelAttribute se usa para vincular el objeto Payment del formulario al metodo. Spring busca los datos en el formulario y los usa para rellenar el Objeto.
 
         AppUser loggedUser = (AppUser) session.getAttribute("loggedUser");
         if (loggedUser == null) {return "redirect:/login";}// Redirige al login si no hay usuario logueado

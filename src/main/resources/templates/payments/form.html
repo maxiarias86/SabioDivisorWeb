@@ -5,7 +5,7 @@
     <title>Registro de Pago</title>
 </head>
 <body>
-
+<!-- Título de la página, si el payment ya tiene ID es una edición, sino uno nuevo. -->
 <h1 th:text="${payment.id == null} ? 'Nuevo Pago' : 'Editar Pago'">Formulario de Pago</h1>
 
 <!-- Muestra el error si hay -->
@@ -13,6 +13,13 @@
     <p th:text="${error}"></p>
 </div>
 
+
+<!--
+Le dice a Thymeleaf que el objeto principal del formulario es payment (una variable del modelo). Eso permite usar campos con th:field
+<input type="text" th:field="*{amount}" />
+<input type="text" name="amount" value="${payment.amount}" />
+Son iguales dado que Thymeleaf completa el name y el value automáticamente basándose en el objeto payment.
+-->
 <form th:action="@{/payments/save}" th:object="${payment}" method="post">
     <!-- ID del pago (oculto) -->
     <input type="hidden" th:field="*{id}" />
