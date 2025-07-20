@@ -40,6 +40,9 @@ public class ExpenseService {
     public Expense save(Expense expense, Map<Long, Double> payers, Map<Long, Double> debtors) {
 
         //VALIDACIONES: Se arrojan en el Service y se catchean en el Controller.
+        if (expense.getDate() == null || expense.getDate().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("La fecha del gasto no puede ser nula o futura.");
+        }
         if (expense.getAmount() <= 0) {
             throw new IllegalArgumentException("El monto del gasto debe ser mayor a cero.");
         }
@@ -49,15 +52,20 @@ public class ExpenseService {
         if(debtors == null || debtors.isEmpty()){
             throw new IllegalArgumentException("Debe haber, al menos, un deudor.");
         }
-        if(expense.getInstallments()<1){
-            throw new IllegalArgumentException("Las cuotas no pueden ser menores a 1.");
+        if(expense.getInstallments()<1 || expense.getInstallments() > 24){//Se limita a 24 cuotas para evitar deudas eternas.
+            throw new IllegalArgumentException("Las cuotas no pueden ser menores a 1 o mayores a 24.");
         }
+
         Double totalPayed = (double) 0;
+        Double totalDebt = (double) 0;
         for (Double value : payers.values()) {
             totalPayed += value;
         }
-        if (Math.abs(totalPayed - expense.getAmount()) > 0.01){//Se deja un mínimo margen de error por redondeo.
-            throw new IllegalArgumentException("La suma de los pagos es distinta al monto del gasto.");
+        for (Double value : debtors.values()) {
+            totalDebt += value;
+        }
+        if (Math.abs(totalPayed - expense.getAmount()) > 0.01 || Math.abs(totalDebt - expense.getAmount()) > 0.01){//Se deja un mínimo margen de error por redondeo.
+            throw new IllegalArgumentException("La suma de los pagos o la suma de las deudas es distinta al monto del gasto.");
         }
 
         Expense savedExpense = expenseRepository.save(expense);//Guarda el Expense y devuelve el objeto guardado con el ID generado que luego va a relacionar a las Debt.

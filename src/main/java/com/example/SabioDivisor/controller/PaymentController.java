@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @Controller
 @RequestMapping("/payments")
 public class PaymentController {
@@ -76,8 +78,21 @@ public class PaymentController {
             model.addAttribute("error", "No puedes agregar pagos en los que no participes.");
             return "payments/form"; // Retorna al formulario si hay un error de validación
         }
+        if (payment.getDate() == null) {
+            model.addAttribute("error", "La fecha del pago es obligatoria.");
+            return "payments/form";
+        }
 
-        service.save(payment);
+        if (payment.getDate().isAfter(LocalDate.now())) {
+            model.addAttribute("error", "La fecha del pago no puede ser futura.");
+            return "payments/form"; // Retorna al formulario si la fecha es nula
+        }
+        try{
+            service.save(payment);
+        } catch (IllegalArgumentException e) {// Captura excepciones de validación lanzadas por el PaymentService
+            model.addAttribute("error", e.getMessage());
+            return "payments/form"; // Retorna al formulario si hay un error de validación
+        }
         return "redirect:/payments";// Redirige a la lista de pagos después de guardar
     }
 

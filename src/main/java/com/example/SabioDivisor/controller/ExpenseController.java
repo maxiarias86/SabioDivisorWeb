@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,6 +64,29 @@ public class ExpenseController {
         if (loggedUser == null) {
             return "redirect:/login";
         }
+
+        //VALIDACIONES: Si el gasto le falta algo o es inválido, se muestra un mensaje de error y se vuelve al formulario.
+        if (expense.getDate() == null || expense.getDate().isAfter(LocalDate.now())) {
+            model.addAttribute("error", "La fecha del gasto no puede ser nula o futura.");
+            model.addAttribute("expense", expense);
+            model.addAttribute("users", appUserService.listAll());
+            return "expenses/form";
+        }
+
+        if (expense.getAmount() <= 0) {
+            model.addAttribute("error", "El monto del gasto debe ser mayor a cero.");
+            model.addAttribute("expense", expense);
+            model.addAttribute("users", appUserService.listAll());
+            return "expenses/form";
+        }
+
+        if (expense.getInstallments() < 1 || expense.getInstallments() > 24) {//Se limita a 24 cuotas para evitar deudas eternas.
+            model.addAttribute("error", "Las cuotas no pueden ser menores a 1 o mayores a 24.");
+            model.addAttribute("expense", expense);
+            model.addAttribute("users", appUserService.listAll());
+            return "expenses/form";
+        }
+
         Map<Long,Double> payers = new HashMap<>();
         Map<Long,Double> debtors = new HashMap<>();
         try{
@@ -82,6 +106,7 @@ public class ExpenseController {
                     }
                 }
             }
+
             expenseService.save(expense,payers,debtors);
             return "redirect:/expenses";
         } catch (Exception e) {//Si se lanza una excepción (por ejemplo, el monto no coincide o hay datos faltantes), se muestra el formulario otra vez con: el error, el gasto cargado previamente, La lista de usuarios para volver a seleccionar pagadores/deudores.
