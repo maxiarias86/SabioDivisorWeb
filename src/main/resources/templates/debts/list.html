@@ -11,22 +11,28 @@
     <thead>
     <tr>
         <th>ID</th>
-        <th>Nombre</th>
-        <th>Email</th>
+        <th>Monto</th>
+        <th>Deudor</th>
+        <th>Acreedor</th>
+        <th>Descripción del Gasto</th>
+        <th>Vencimiento</th>
+        <th>Cuota</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="debt : ${debts}">
         <td th:text="${debt.id}">1</td>
-        <td th:text="'$'${debt.amount}'.-'">monto</td>
-        <td th:text="${debt.debtor}">deudor</td>
-        <td th:text="${debt.creditor}">creditor</td>
-        <td th:text="${debt.expense}">expense</td>
+        <td th:text="'$' + ${debt.amount} + '.-'">monto</td>
+        <td th:text="${debt.debtor.getName()}">deudor</td>
+        <td th:text="${debt.creditor.getName()}">creditor</td>
+        <td th:text="${debt.expense.description}">expense</td>
         <td th:text="${debt.dueDate}">fecha</td>
         <td th:text="${debt.installmentNumber}">cuota</td>
 
     </tr>
     </tbody>
 </table>
+<a href="index">Volver al Index</a>
+
 </body>
 </html>

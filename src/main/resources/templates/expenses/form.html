@@ -1,3 +1,7 @@
+<div th:if="${error}">
+    <p th:text="${error}"></p>
+</div>
+
 <form th:action="@{/expenses/save}" method="post">
     <input type="hidden" name="id" th:value="${expense.id}" />
 
@@ -48,3 +52,4 @@
     <br>
     <button type="submit">Guardar gasto</button>
 </form>
+<a href="index">Volver al Index</a>

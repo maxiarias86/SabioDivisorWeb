@@ -4,6 +4,7 @@ import com.example.SabioDivisor.model.AppUser;
 import com.example.SabioDivisor.model.Debt;
 import com.example.SabioDivisor.model.Expense;
 import com.example.SabioDivisor.service.AppUserService;
+import com.example.SabioDivisor.service.DebtService;
 import com.example.SabioDivisor.service.ExpenseService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class ExpenseController {
 
     @Autowired
     private ExpenseService expenseService;
+
+    @Autowired
+    private DebtService debtService;
 
     @Autowired
     private AppUserService appUserService;
@@ -125,7 +129,6 @@ public class ExpenseController {
         if (loggedUser == null) {
             return "redirect:/login";
         }
-
         Expense expense = expenseService.findById(id);
 
         //VALIDACIONES: Si el gasto no existe o si el usuario no participó en el gasto, se muestra un mensaje de error y se redirige a la lista de gastos.
@@ -144,7 +147,7 @@ public class ExpenseController {
         //AGREGA LAS DEUDAS Y PAGOS AL GASTO PARA QUE SE MUESTREN EN EL FORMULARIO DE EDICIÓN.
         Map<Long, Double> payers = new HashMap<>();
         Map<Long, Double> debtors = new HashMap<>();
-        List<Debt> debts = expenseService.findDebtsByExpenseId(expense.getId());
+        List<Debt> debts = debtService.findDebtsByExpenseId(expense.getId());
 
         for (Debt debt : debts) {
             Long creditorId = debt.getCreditor().getId();

@@ -32,10 +32,6 @@ public class ExpenseService {
         return expenseRepository.findById(id).orElse(null);
     }
 
-    public List<Debt> findDebtsByExpenseId(Long expenseId) {
-        return debtRepository.findAllByExpenseId(expenseId);
-    }
-
     @Transactional//Actua de forma similar al commit false de los DAO. Si no se completa toda la transaccion a la base de datos no se carga la Expense (Por ejemplo si hay un error en la carga de las Debt).
     public Expense save(Expense expense, Map<Long, Double> payers, Map<Long, Double> debtors) {
 
