@@ -22,7 +22,8 @@
     <tbody>
     <tr th:each="debt : ${debts}">
         <td th:text="${debt.id}">1</td>
-        <td th:text="'$' + ${debt.amount} + '.-'">monto</td>
+        <td th:text="'$' + ${#numbers.formatDecimal(debt.amount, 1, 'COMMA', 2, 'POINT')} + '.-'">monto</td>
+        <!-- numbers.formatDecimal se usa para formatear el monto con coma como separador decimal, 2 como la cantidad fija de decimales y punto como separador de miles -->
         <td th:text="${debt.debtor.getName()}">deudor</td>
         <td th:text="${debt.creditor.getName()}">creditor</td>
         <td th:text="${debt.expense.description}">expense</td>

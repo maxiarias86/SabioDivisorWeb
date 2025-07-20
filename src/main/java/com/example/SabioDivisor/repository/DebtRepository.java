@@ -30,29 +30,11 @@ public interface DebtRepository extends JpaRepository<Debt, Long> {
 
     @Query(
             "SELECT d FROM Debt d " +
-                    "WHERE ((d.debtor.id = :userId AND d.creditor.id = :friendId) " +
-                    "OR (d.debtor.id = :friendId AND d.creditor.id = :userId)) " +
-                    "AND d.expense.date <= :date"
+                    "WHERE ((d.debtor.id = :userId AND d.creditor.id = :friendId) OR (d.debtor.id = :friendId AND d.creditor.id = :userId)) " +
+                    "AND d.dueDate <= :date ORDER BY d.expense.date DESC"
     )
-    List<Debt> findByPayerOrRecipient(@Param("friendId") Long payerId, @Param("userId") Long recipientId, @Param("date") LocalDate date);
+    List<Debt> findByPayerOrRecipient(@Param("userId") Long userId, @Param("friendId") Long friendId, @Param("date") LocalDate date);
 
-/*
-        Key Default Methods:
-            save(S entity): Saves a given entity.
-            saveAll(Iterable<S> entities): Saves all given entities.
-            findById(ID id): Retrieves an entity by its ID. Returns an Optional to handle cases where the entity might not be found.
-            existsById(ID id): Returns whether an entity with the given ID exists.
-            findAll(): Returns all instances of the type.
-            findAllById(Iterable<ID> ids): Returns all instances of the type with the given IDs.
-            count(): Returns the number of entities available.
-            delete(T entity): Deletes a given entity.
-            deleteById(ID id): Deletes the entity with the given ID.
-            deleteAll(): Deletes all entities managed by the repository.
-            deleteAll(Iterable<? extends T> entities): Deletes the given entities.
-            deleteAllInBatch(): Deletes all entities in a batch call.
-            deleteAllByIdInBatch(Iterable<ID> ids): Deletes the entities identified by the given IDs using a single query.
-            flush(): Flushes all pending changes to the database (specific to JpaRepository).
-            saveAndFlush(S entity): Saves an entity and flushes changes immediately (specific to JpaRepository).
-         */
+
 }
 

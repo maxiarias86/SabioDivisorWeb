@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Balance con amigo</title>
+</head>
+<body>
+<h1 th:text="'Balance con ' + ${balanceDTO.friend.name} + ' al ' + ${date}">Balance con [nombre]</h1>
+<h2 th:text="'Saldo actual: $' + ${balanceDTO.balance}">Saldo: $0.00</h2>
+
+<!-- Formulario para cambiar la fecha -->
+<form method="get" th:action="@{/balance/{id}(id=${balanceDTO.friend.id})}">
+    <label for="date">Cambiar fecha:</label>
+    <input type="date" id="date" name="date" th:value="${date}">
+    <button type="submit">Cambiar fecha</button>
+</form>
+
+<hr>
+
+<h3>Pagos</h3>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Fecha</th>
+        <th>Monto</th>
+        <th>Pagador</th>
+        <th>Receptor</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="p : ${balanceDTO.payments}">
+        <td th:text="${p.date}">2025-01-01</td>
+        <td th:text="${p.amount}">100.00</td>
+        <td th:text="${p.payer.name}">Juan</td>
+        <td th:text="${p.recipient.name}">María</td>
+    </tr>
+    <tr th:if="${balanceDTO.payments.isEmpty()}">
+        <td colspan="4">No hay pagos con ese usuario hasta esta fecha.</td>
+    </tr>
+    </tbody>
+</table>
+
+<h3>Deudas</h3>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Vencimiento</th>
+        <th>Monto</th>
+        <th>Deudor</th>
+        <th>Acreedor</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="d : ${balanceDTO.debts}">
+        <td th:text="${d.dueDate}">2025-01-05</td>
+        <td th:text="${d.amount}">200.00</td>
+        <td th:text="${d.debtor.name}">María</td>
+        <td th:text="${d.creditor.name}">Juan</td>
+    </tr>
+    <tr th:if="${balanceDTO.debts.isEmpty()}">
+        <td colspan="4">No hay deudas con ese usuario hasta esta fecha.</td>
+    </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<a th:href="@{/index}">Volver al index</a>
+
+</body>
+</html>

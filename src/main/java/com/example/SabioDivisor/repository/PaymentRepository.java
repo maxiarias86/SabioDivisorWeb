@@ -19,7 +19,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
             "SELECT p FROM Payment p " +
             "WHERE ((p.payer.id = :payerId AND p.recipient.id = :recipientId) " +
             "OR (p.payer.id = :recipientId AND p.recipient.id = :payerId))"+
-                    "AND p.date <= :date" // Filtra pagos hasta la fecha actual
+                    "AND p.date <= :date ORDER BY p.date DESC" // Filtra pagos hasta la fecha actual
     )
     List<Payment> findByPayerOrRecipient(@Param("payerId") Long payerId, @Param("recipientId") Long recipientId, @Param("date") LocalDate date);
 

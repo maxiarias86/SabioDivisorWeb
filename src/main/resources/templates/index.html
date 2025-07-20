@@ -24,11 +24,27 @@
 </form>
 
 <h2>Mi balance con otros usuarios</h2>
-<ul>
-  <li th:each="balance : ${balances}" th:text="${balance}"></li>
-  <li th:if="${#lists.isEmpty(balances)}">No hay deudas ni pagos con otros usuarios.</li>
-</ul>
-
+<table border="1">
+  <thead>
+  <tr>
+    <th>Amigo</th>
+    <th>Balance</th>
+    <th>Acción</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="balance : ${balances}">
+    <td th:text="${balance.friend.name}">Nombre</td>
+    <td th:text="'$' + ${#numbers.formatDecimal(balance.amount, 1, 'COMMA', 2, 'POINT')}">0,00</td>
+    <td>
+      <a th:href="@{/balance/{id}(id=${balance.friend.id})}" th:hrefappend="|?date=${date}|">Ver detalle</a>
+    </td>
+  </tr>
+  <tr th:if="${#lists.isEmpty(balances)}">
+    <td colspan="3">No hay deudas ni pagos con otros usuarios.</td>
+  </tr>
+  </tbody>
+</table>
 
 
 </body>
