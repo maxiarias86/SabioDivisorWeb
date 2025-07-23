@@ -26,7 +26,7 @@ public class IndexController {
     // Este controlador maneja la ruta raíz y redirige a la página de inicio
     @RequestMapping("/")
     public String redirectToIndex() {
-        return "redirect:/index"; // Redirige a la lista de deudas
+        return "redirect:/index";
     }
 
     @GetMapping("/index")

@@ -57,7 +57,7 @@ Son iguales dado que Thymeleaf completa el name y el value automáticamente bas�
     <!-- Botón -->
     <button type="submit" th:text="${payment.id == null} ? 'Guardar Pago' : 'Actualizar Pago'">Guardar</button>
 </form>
-<a href="index">Volver al Index</a>
+<a th:href="@{/index}">Volver al index</a>
 
 </body>
 </html>
