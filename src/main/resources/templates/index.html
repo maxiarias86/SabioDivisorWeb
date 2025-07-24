@@ -2,11 +2,14 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
+  <script src="https://cdn.tailwindcss.com"></script>
   <title>Inicio</title>
 </head>
-<body>
+<body class="bg-gray-50 min-h-screen text-gray-800">
 
-<h1 th:text="'¡Bienvenido, ' + ${user.name} + '!'">¡Bienvenido!</h1>
+<div class="text-blue-600">
+  <h1 class="text-3xl font-bold text-center mb-6" th:text="'¡Bienvenido, ' + ${user.name} + '!'">¡Bienvenido!</h1>
+</div>
 
 <nav>
   <ul>
@@ -23,29 +26,28 @@
   <button type="submit">Actualizar</button>
 </form>
 
-<h2>Mi balance con otros usuarios</h2>
-<table border="1">
-  <thead>
+<h2 class="text-xl font-semibold text-gray-700 mt-8 mb-4">Mi balance con otros usuarios</h2>
+<table class="w-full border border-gray-300 rounded-md text-left">
+  <thead class="bg-gray-200">
   <tr>
-    <th>Amigo</th>
-    <th>Balance</th>
-    <th>Acción</th>
+    <th class="p-2">Amigo</th>
+    <th class="p-2">Balance</th>
+    <th class="p-2">Acción</th>
   </tr>
   </thead>
   <tbody>
-  <tr th:each="balance : ${balances}">
-    <td th:text="${balance.friend.name}">Nombre</td>
-    <td th:text="'$' + ${#numbers.formatDecimal(balance.amount, 1, 'COMMA', 2, 'POINT')}">0,00</td>
-    <td>
-      <a th:href="@{/balance/{id}(id=${balance.friend.id})}" th:hrefappend="|?date=${date}|">Ver detalle</a>
+  <tr th:each="balance : ${balances}" class="border-t">
+    <td class="p-2" th:text="${balance.friend.name}">Nombre</td>
+    <td class="p-2" th:text="'$' + ${#numbers.formatDecimal(balance.amount, 1, 'COMMA', 2, 'POINT')}">0,00</td>
+    <td class="p-2">
+      <a class="text-blue-600 hover:underline" th:href="@{/balance/{id}(id=${balance.friend.id})}" th:hrefappend="|?date=${date}|">Ver detalle</a>
     </td>
   </tr>
   <tr th:if="${#lists.isEmpty(balances)}">
-    <td colspan="3">No hay deudas ni pagos con otros usuarios.</td>
+    <td colspan="3" class="p-4 text-center text-gray-500">No hay deudas ni pagos con otros usuarios.</td>
   </tr>
   </tbody>
 </table>
-
 
 </body>
 </html>

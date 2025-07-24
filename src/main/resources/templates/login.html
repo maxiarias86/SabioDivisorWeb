@@ -1,26 +1,50 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Iniciar Sesión</title>
-</head>
-<body>
-<h1>Iniciar Sesión</h1>
-<div th:if="${error}">
-    <p th:text="${error}"></p>
-</div>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"><!-- Esto habilita el uso de todos los atributos th: -->
 
-<form th:action="@{/login}" method="post">
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required />
+    <head>
+        <meta charset="UTF-8">
+        <script src="https://cdn.tailwindcss.com"></script><!--Para importar tailwind-->
+        <title>Iniciar Sesión</title>
+    </head>
 
-    <label for="password">Contraseña:</label>
-    <input type="password" id="password" name="password" required />
+    <body class="h-screen flex items-center justify-center bg-blue-100"><!-- h-screen: ocupa toda la altura del navegador-->
+        <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md"><!-- w-full max-w-md: ocupa todo el ancho posible hasta un máximo mediano-->
 
-    <button type="submit">Entrar</button>
-</form>
-<p>
-    ¿No tienes cuenta? <a th:href="@{/users/new}">Regístrate</a>
-</p>
-</body>
+            <h1 class="text-2xl font-bold text-center mb-6 text-blue-900">Iniciar Sesión</h1>
+
+            <p class="text-gray-600 text-center mb-4">Por favor, ingresa tus credenciales para continuar.</p>
+
+            <form th:action="@{/login}" method="post" class="flex flex-col items-center gap-2"><!-- th:action="@{/login}" define la URL a la que se enviará el formulario al hacer submit -->
+
+                <div class="w-full flex flex-row items-center">
+                    <label for="email" class="text-md font-medium text-blue-900">Email:</label>
+                    <input type="email" id="email" name="email" required
+                           class="flex-1 bg-gray-100 rounded p-2"
+                    />
+                </div>
+
+
+                <div class="w-full flex flex-row items-center">
+                    <label for="password" class="text-md font-medium text-blue-900">Contraseña:</label>
+                    <input type="password" id="password" name="password" required
+                           class="flex-1 bg-gray-100 rounded p-2"
+                    />
+                </div>
+
+                <div class="w-full flex flex-col items-center gap-4 mt-4">
+                    <button class="bg-blue-400 p-2 rounded-lg transition hover:bg-blue-600 text-white" type="submit">Ingresar</button>
+                </div>
+
+                <div th:if="${error}" class="w-full text-red-800 text-sm text-center mt-4"><!-- Mostrar mensaje de error si existe -->
+                    <p th:text="${error}"></p>
+                </div>
+
+            </form>
+            <p class="text-sm text-center mt-6 text-gray-700">
+                ¿No tienes cuenta?
+                <a th:href="@{/users/new}" class="text-blue-600 hover:underline font-medium">Regístrate</a><!-- th:href="@{/users/new}" define la URL a la que se redirigirá al usuario para registrarse. Esto genera: <a href="/users/new">Registrarse</a> -->
+            </p>
+
+        </div>
+    </body>
 </html>
