@@ -1,50 +1,79 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org"><!-- Habilita el uso de todos los atributos th: -->
+
 <head>
   <meta charset="UTF-8">
   <script src="https://cdn.tailwindcss.com"></script><!--Para importar tailwind-->
   <title>Lista de Gastos</title>
 </head>
-<body>
-<h1>Mis Gastos</h1>
-<div th:if="${success}">
-  <p th:text="${success}"></p>
-</div>
-<div th:if="${error}">
-  <p th:text="${error}"></p>
-</div>
 
+<body class="min-h-screen bg-blue-100 flex flex-col">
 
-<a th:href="@{/expenses/new}">+ Nuevo gasto</a>
+<div th:replace="fragments/navbar :: navbar"></div><!-- Incluye el navbar -->
 
-<table border="1">
-  <thead>
-  <tr>
-    <th>Descripción</th>
-    <th>Monto</th>
-    <th>Cuotas</th>
-    <th>Fecha</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:if="${expenses.size() == 0}">
-    <td colspan="4">No hay gastos registrados.</td>
-  </tr>
+<main class="flex-grow flex flex-col items-center justify-start px-6 py-8"><!-- Contenido principal -->
 
-  <tr th:each="expense : ${expenses}">
-    <td th:text="${expense.description}"></td>
-    <td th:text="${expense.amount}"></td>
-    <td th:text="${expense.installments}"></td>
-    <td th:text="${expense.date}"></td>
-    <td>
-      <a th:href="@{'/expenses/edit/' + ${expense.id}}">Editar</a> |
-      <a th:href="@{'/expenses/delete/' + ${expense.id}}" onclick="return confirm('¿Estás seguro que querés eliminar este gasto?')">Eliminar</a>
-      <a th:href="@{'/debts/list/' + ${expense.id}}">Ver deudas</a>
-    </td>
-  </tr>
-  </tbody>
-</table>
-<a th:href="@{/index}">Volver al index</a>
+  <h1 class="text-2xl font-bold text-blue-900 mb-6">Mis Gastos</h1>
+
+  <!-- Mensaje de éxito -->
+  <div th:if="${success}" class="text-green-800 bg-green-100 border border-green-300 rounded p-2 mb-4 text-sm text-center">
+    <p th:text="${success}"></p>
+  </div>
+
+  <!-- Mensaje de error -->
+  <div th:if="${error}" class="text-red-800 bg-red-100 border border-red-300 rounded p-2 mb-4 text-sm text-center">
+    <p th:text="${error}"></p>
+  </div>
+
+  <!-- Botón para nuevo gasto -->
+  <div class="mb-4 self-start">
+    <a th:href="@{/expenses/new}"
+       class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+      + Nuevo gasto
+    </a>
+  </div>
+
+  <!-- Tabla de gastos -->
+  <div class="w-full max-w-4xl bg-white p-6 rounded shadow-md">
+    <table class="w-full text-left text-sm border border-gray-300 rounded">
+      <thead class="bg-gray-200">
+      <tr>
+        <th class="p-2">Descripción</th>
+        <th class="p-2">Monto</th>
+        <th class="p-2">Cuotas</th>
+        <th class="p-2">Fecha</th>
+        <th class="p-2">Acciones</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:if="${expenses.size() == 0}">
+        <td colspan="5" class="p-4 text-center text-gray-500">No hay gastos registrados.</td>
+      </tr>
+
+      <tr th:each="expense : ${expenses}" class="border-t">
+        <td class="p-2" th:text="${expense.description}">Descripción</td>
+        <td class="p-2"
+            th:text="'$' + ${#numbers.formatDecimal(expense.amount, 1, 'POINT', 2, 'COMMA')}">
+          $0,00
+        </td>
+        <td class="p-2" th:text="${expense.installments}">1</td>
+        <td class="p-2"
+            th:text="${#temporals.format(expense.date, 'dd/MM/yyyy')}">
+          01/01/2025
+        </td>
+        <td class="p-2">
+          <a th:href="@{'/expenses/edit/' + ${expense.id}}" class="text-yellow-600 hover:underline mr-2">Editar</a>
+          <a th:href="@{'/expenses/delete/' + ${expense.id}}"
+             onclick="return confirm('¿Estás seguro que querés eliminar este gasto?')"
+             class="text-red-600 hover:underline mr-2">Eliminar</a>
+          <a th:href="@{'/debts/list/' + ${expense.id}}" class="text-blue-600 hover:underline">Ver deudas</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
 
 </body>
 </html>

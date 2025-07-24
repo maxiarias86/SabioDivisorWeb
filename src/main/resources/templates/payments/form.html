@@ -16,7 +16,7 @@
             <h1 class="text-2xl font-bold text-blue-900 mb-6"
                 th:text="${payment.id == null} ? 'Nuevo Pago' : 'Editar Pago'">Formulario de Pago</h1><!-- Título de la página, si el payment ya tiene ID es una edición, sino uno nuevo. -->
 
-            <div th:if="${error}"><!-- Muestra el error si hay -->
+            <div th:if="${error}" class="text-red-800 p-2 mb-4 text-sm text-center"><!-- Muestra el mensaje de error si existe -->
                 <p th:text="${error}"></p>
             </div>
 

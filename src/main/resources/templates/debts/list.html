@@ -1,40 +1,59 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org"><!-- Habilita el uso de todos los atributos th: -->
+
 <head>
     <meta charset="UTF-8">
     <script src="https://cdn.tailwindcss.com"></script><!--Para importar tailwind-->
     <title>Lista de Deudas</title>
 </head>
-<body>
-<h1>Deudas Registradas</h1>
 
-<table border="1">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Monto</th>
-        <th>Deudor</th>
-        <th>Acreedor</th>
-        <th>Descripción del Gasto</th>
-        <th>Vencimiento</th>
-        <th>Cuota</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="debt : ${debts}">
-        <td th:text="${debt.id}">1</td>
-        <td th:text="'$' + ${#numbers.formatDecimal(debt.amount, 1, 'COMMA', 2, 'POINT')} + '.-'">monto</td>
-        <!-- numbers.formatDecimal se usa para formatear el monto con coma como separador decimal, 2 como la cantidad fija de decimales y punto como separador de miles -->
-        <td th:text="${debt.debtor.getName()}">deudor</td>
-        <td th:text="${debt.creditor.getName()}">creditor</td>
-        <td th:text="${debt.expense.description}">expense</td>
-        <td th:text="${debt.dueDate}">fecha</td>
-        <td th:text="${debt.installmentNumber}">cuota</td>
+<body class="min-h-screen bg-blue-100 flex flex-col">
 
-    </tr>
-    </tbody>
-</table>
-<a th:href="@{/index}">Volver al index</a>
+<div th:replace="fragments/navbar :: navbar"></div><!-- Incluye el navbar -->
+
+<main class="flex-grow flex flex-col items-center justify-start px-6 py-8">
+
+    <h1 class="text-2xl font-bold text-blue-900 mb-6">Deudas Registradas</h1>
+
+    <div class="w-full max-w-5xl bg-white p-6 rounded shadow-md">
+        <table class="w-full text-left text-sm border border-gray-300 rounded">
+            <thead class="bg-gray-200">
+            <tr>
+                <th class="p-2">ID</th>
+                <th class="p-2">Monto</th>
+                <th class="p-2">Deudor</th>
+                <th class="p-2">Acreedor</th>
+                <th class="p-2">Descripción del Gasto</th>
+                <th class="p-2">Vencimiento</th>
+                <th class="p-2">Cuota</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="debt : ${debts}" class="border-t">
+                <td class="p-2" th:text="${debt.id}">1</td>
+                <td class="p-2"
+                    th:text="'$' + ${#numbers.formatDecimal(debt.amount, 1, 'POINT', 2, 'COMMA')}">
+                    $0,00
+                </td>
+                <!-- numbers.formatDecimal se usa para formatear el monto con punto como separador de miles y coma para decimales -->
+                <td class="p-2" th:text="${debt.debtor.name}">deudor</td>
+                <td class="p-2" th:text="${debt.creditor.name}">acreedor</td>
+                <td class="p-2" th:text="${debt.expense.description}">Gasto</td>
+                <td class="p-2" th:text="${#temporals.format(debt.dueDate, 'dd/MM/yyyy')}">01/01/2025</td>
+                <td class="p-2" th:text="${debt.installmentNumber}">1</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-6">
+        <a th:href="@{/index}"
+           class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 transition">
+            Volver al index
+        </a>
+    </div>
+
+</main>
 
 </body>
 </html>

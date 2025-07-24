@@ -1,55 +1,187 @@
-<div th:if="${error}">
-    <p th:text="${error}"></p>
-</div>
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"><!-- Habilita el uso de todos los atributos th: -->
 
-<form th:action="@{/expenses/save}" method="post">
-    <input type="hidden" name="id" th:value="${expense.id}" />
+    <head>
+        <meta charset="UTF-8">
+        <script src="https://cdn.tailwindcss.com"></script><!--Para importar tailwind-->
+        <title>Formulario de Gasto</title>
+    </head>
 
-    <label>Monto total:</label>
-    <input type="number" step="0.01" name="amount" th:value="${expense.amount}" required><br><br>
+    <body class="min-h-screen bg-blue-100 flex flex-col">
 
-    <label>Descripción:</label>
-    <input type="text" name="description" th:value="${expense.description}" required><br><br>
+        <div th:replace="fragments/navbar :: navbar"></div><!-- Incluye el navbar -->
 
-    <label>Fecha:</label>
-    <input type="date" name="date" th:value="${expense.date}" required><br><br>
+        <main class="flex-grow flex flex-col items-center justify-start px-6 py-8">
 
-    <label>Cuotas:</label>
-    <input type="number" name="installments" min="1" th:value="${expense.installments}" required><br><br>
+            <h1 class="text-2xl font-bold text-blue-900 mb-6"
+                th:text="${expense.id == null} ? 'Nuevo Gasto' : 'Editar Gasto'">Formulario de Gasto</h1><!-- Título de la página, si el expense ya tiene ID es una edición, sino uno nuevo. -->
 
-    <h3>Pagadores</h3>
-    <table border="1">
-        <tr>
-            <th>Usuario</th>
-            <th>Monto que pagó</th>
-        </tr>
-        <tr th:each="user : ${users}">
-            <td th:text="${user.name}"></td>
-            <td>
-                <input type="number" step="0.01" min="0"
-                       th:name="'payer_' + ${user.id}"
-                       th:value="${payers[user.id]}" />
-            </td>
-        </tr>
-    </table>
+            <div th:if="${error}" class="text-red-800 p-2 mb-4 text-sm text-center"><!-- Muestra el mensaje de error si existe -->
+                <p th:text="${error}"></p>
+            </div>
 
-    <h3>Deudores</h3>
-    <table border="1">
-        <tr>
-            <th>Usuario</th>
-            <th>Monto que debe</th>
-        </tr>
-        <tr th:each="user : ${users}">
-            <td th:text="${user.name}"></td>
-            <td>
-                <input type="number" step="0.01" min="0"
-                       th:name="'debtor_' + ${user.id}"
-                       th:value="${debtors[user.id]}" />
-            </td>
-        </tr>
-    </table>
+            <form th:action="@{/expenses/save}" method="post"
+                  class="bg-white p-6 rounded shadow-md w-full max-w-lg space-y-6"><!-- El max-width es mayor a otros formularios por la "descripción" -->
 
-    <br>
-    <button type="submit">Guardar gasto</button>
-</form>
-<a th:href="@{/index}">Volver al index</a>
+                <input type="hidden" name="id" th:value="${expense.id}" />
+
+                <div class="w-full flex flex-row items-center">
+                    <label class="text-md font-medium text-blue-900 w-40">Monto total:</label>
+                    <input class="flex-1 bg-gray-100 rounded p-2" type="number" step="0.01" name="amount"
+                           th:value="${expense.amount}" required/>
+                </div>
+
+                <div class="w-full flex flex-row items-center">
+                    <label class="text-md font-medium text-blue-900 w-40">Descripción:</label>
+                    <input class="flex-1 bg-gray-100 rounded p-2" type="text" name="description"
+                           th:value="${expense.description}" required/>
+                </div>
+
+                <div class="w-full flex flex-row items-center">
+                    <label class="text-md font-medium text-blue-900 w-40">Fecha:</label>
+                    <input class="flex-1 bg-gray-100 rounded p-2" type="date" name="date"
+                           th:value="${expense.date}" required/>
+                </div>
+
+                <div class="w-full flex flex-row items-center">
+                    <label class="text-md font-medium text-blue-900 w-40">Cuotas:</label>
+                    <input class="flex-1 bg-gray-100 rounded p-2" type="number" min="1" name="installments"
+                           th:value="${expense.installments}" required/>
+                </div>
+
+                <!-- Sección dinámica de Pagadores -->
+                <div>
+                    <h3 class="text-lg font-semibold text-blue-800 mb-2">Pagadores</h3>
+                    <!-- Selector + input + botón -->
+                    <div class="flex items-center gap-2 mb-4">
+                        <select id="select-payer" class="bg-gray-100 rounded p-2 flex-1">
+                            <option value="" disabled selected>Seleccionar usuario</option>
+                            <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}"></option>
+                        </select>
+                        <input id="input-payer-amount" type="number" step="0.01" min="0"
+                               placeholder="Monto"
+                               class="bg-gray-100 rounded p-2 w-32"/>
+                        <button type="button"
+                                class="bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-700 transition"
+                                onclick="addEntry('payer')">
+                            Agregar
+                        </button>
+                    </div>
+                    <!-- Tabla con los pagadores agregados -->
+                    <table class="w-full text-left text-sm border border-gray-300 rounded">
+                        <thead class="bg-gray-200">
+                        <tr>
+                            <th class="p-2">Usuario</th>
+                            <th class="p-2">Monto que pagó</th>
+                            <th class="p-2">Acción</th>
+                        </tr>
+                        </thead>
+                        <tbody id="payer-list"><!-- Se completará dinámicamente con JS y Thymeleaf -->
+                        <tr th:each="entry : ${payers}" th:id="'row-payer-' + ${entry.key}" class="border-t">
+                            <td class="p-2" th:text="${#lists.find(users, u -> u.id == entry.key).name}">Usuario</td>
+                            <td class="p-2" th:text="${entry.value}">Monto</td>
+                            <td class="p-2 text-red-600 hover:underline cursor-pointer" onclick="this.parentElement.remove()">Eliminar</td>
+                            <input type="hidden" th:name="'payer_' + ${entry.key}" th:value="${entry.value}" />
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Sección dinámica de Deudores -->
+                <div class="mt-8">
+                    <h3 class="text-lg font-semibold text-blue-800 mb-2">Deudores</h3>
+                    <!-- Selector + input + botón -->
+                    <div class="flex items-center gap-2 mb-4">
+                        <select id="select-debtor" class="bg-gray-100 rounded p-2 flex-1">
+                            <option value="" disabled selected>Seleccionar usuario</option>
+                            <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}"></option>
+                        </select>
+                        <input id="input-debtor-amount" type="number" step="0.01" min="0"
+                               placeholder="Monto"
+                               class="bg-gray-100 rounded p-2 w-32"/>
+                        <button type="button"
+                                class="bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-700 transition"
+                                onclick="addEntry('debtor')">
+                            Agregar
+                        </button>
+                    </div>
+                    <!-- Tabla con los deudores agregados -->
+                    <table class="w-full text-left text-sm border border-gray-300 rounded">
+                        <thead class="bg-gray-200">
+                        <tr>
+                            <th class="p-2">Usuario</th>
+                            <th class="p-2">Monto que debe</th>
+                            <th class="p-2">Acción</th>
+                        </tr>
+                        </thead>
+                        <tbody id="debtor-list"><!-- Se completará dinámicamente con JS y Thymeleaf -->
+                        <tr th:each="entry : ${debtors}" th:id="'row-debtor-' + ${entry.key}" class="border-t">
+                            <td class="p-2" th:text="${#lists.find(users, u -> u.id == entry.key).name}">Usuario</td>
+                            <td class="p-2" th:text="${entry.value}">Monto</td>
+                            <td class="p-2 text-red-600 hover:underline cursor-pointer" onclick="this.parentElement.remove()">Eliminar</td>
+                            <input type="hidden" th:name="'debtor_' + ${entry.key}" th:value="${entry.value}" />
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="w-full flex justify-center mt-4">
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+                            type="submit">
+                        Guardar gasto
+                    </button>
+                </div>
+            </form>
+
+            <script>
+                function addEntry(type) {// type puede ser "payer" o "debtor"
+                    const select = document.getElementById(`select-${type}`);// Obtiene el select del tipo de usuario
+                    const amountInput = document.getElementById(`input-${type}-amount`);// Obtiene el input del monto
+                    const list = document.getElementById(`${type}-list`);// Obtiene la lista donde se agregarán los usuarios
+
+
+                    //Define los elementos del DOM que se usarán para agregar un nuevo usuario pagador o deudor
+                    /*
+                    Esto accede a los elementos del HTML usando el valor de type. Por ejemplo, si type = "payer", busca:
+                    - select-payer
+                    - input-payer-amount
+                    - payer-list
+                     */
+
+                    const userId = select.value;// Obtiene el ID del usuario seleccionado <select> en el formulario
+                    const userName = select.options[select.selectedIndex].text;// Obtiene el nombre visible del usuario
+                    const amount = amountInput.value;// Obtiene el monto ingresado
+
+                    if (!userId || !amount || amount <= 0) {// Valida que se haya seleccionado un usuario e ingresado un monto válido
+                        alert("Seleccioná un usuario y un monto válido.");//Arroja un alert
+                        return;//Cancela lo anterior si no se cumplen las condiciones
+                    }
+
+                    if (document.getElementById(`row-${type}-${userId}`)) {// Verifica si el usuario ya fue agregado
+                        alert("Ese usuario ya fue agregado.");
+                        return;
+                    }
+
+                    //Creal la fila (<tr>) de la tabla con los datos del usuario y el monto
+                    const tr = document.createElement("tr");// Crea una nueva fila para la tabla
+                    tr.className = "border-t";// Añade una clase Tailwind para el borde
+                    tr.id = `row-${type}-${userId}`;// Asigna un ID único a la fila como row-payer-3 o row-debtor-7
+                    tr.innerHTML = `
+                        <td class="p-2">${userName}</td>
+                        <td class="p-2">${amount}</td>
+                        <td class="p-2 text-red-600 hover:underline cursor-pointer" onclick="this.parentElement.remove()">Eliminar</td> <!-- Añade una columna para eliminar la fila -->
+                        <input type="hidden" name="${type}_${userId}" value="${amount}"><!-- Añade un input oculto que se envía en el formulario con el nombre payer_3, debtor_7, etc. De esta manera los toma el controller-->
+                        `;
+
+                    list.appendChild(tr);// Añade la nueva fila a la lista
+
+                    select.selectedIndex = 0;// Resetea el select para que no quede seleccionado el usuario agregado
+                    amountInput.value = "";// Resetea el input del monto
+                }
+            </script>
+
+
+        </main>
+
+    </body>
+</html>
