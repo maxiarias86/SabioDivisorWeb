@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <body>
+        <nav th:fragment="navbar" class="bg-blue-900 text-white px-6 py-4 shadow-md flex justify-between items-center"><!-- Fragmento de navbar que se puede incluir en otras páginas. Se incluye con <div th:replace="fragments/navbar :: navbar"></div>-->
+            <a class="text-lg font-bold"
+                th:href="@{/index}">SabioDivisor
+            </a><!-- Vuelve al index -->
+            <ul class="flex gap-6 text-sm font-medium"><!-- Lista horizontal de anchors con gap entre ellos -->
+                <li><a href="/payments" class="hover:underline">Pagos</a></li><!-- Link que se subraya con hover -->
+                <li><a href="/expenses" class="hover:underline">Gastos</a></li>
+                <li><a href="/users/edit" class="hover:underline">Editar Usuario</a></li>
+                <li><a href="/logout" class="hover:underline text-red-300">Cerrar sesión</a></li>
+            </ul>
+        </nav>
+    </body>
+</html>

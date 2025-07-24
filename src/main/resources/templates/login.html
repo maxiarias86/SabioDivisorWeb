@@ -8,7 +8,7 @@
     </head>
 
     <body class="h-screen flex items-center justify-center bg-blue-100"><!-- h-screen: ocupa toda la altura del navegador-->
-        <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md"><!-- w-full max-w-md: ocupa todo el ancho posible hasta un máximo mediano-->
+        <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md"><!-- w-full max-w-md: ocupa full el ancho posible hasta un máximo mediano-->
 
             <h1 class="text-2xl font-bold text-center mb-6 text-blue-900">Iniciar Sesión</h1>
 
@@ -17,22 +17,26 @@
             <form th:action="@{/login}" method="post" class="flex flex-col items-center gap-2"><!-- th:action="@{/login}" define la URL a la que se enviará el formulario al hacer submit -->
 
                 <div class="w-full flex flex-row items-center">
-                    <label for="email" class="text-md font-medium text-blue-900">Email:</label>
+
+                    <label for="email"
+                           class="text-md font-medium text-blue-900">Email:
+                    </label>
+
                     <input type="email" id="email" name="email" required
-                           class="flex-1 bg-gray-100 rounded p-2"
-                    />
+                           class="flex-1 bg-gray-100 rounded p-2"/>
                 </div>
 
 
                 <div class="w-full flex flex-row items-center">
                     <label for="password" class="text-md font-medium text-blue-900">Contraseña:</label>
                     <input type="password" id="password" name="password" required
-                           class="flex-1 bg-gray-100 rounded p-2"
-                    />
+                           class="flex-1 bg-gray-100 rounded p-2"/>
                 </div>
 
                 <div class="w-full flex flex-col items-center gap-4 mt-4">
-                    <button class="bg-blue-400 p-2 rounded-lg transition hover:bg-blue-600 text-white" type="submit">Ingresar</button>
+                    <button class="bg-blue-400 p-2 rounded-lg transition hover:bg-blue-600 text-white"
+                            type="submit">Ingresar
+                    </button>
                 </div>
 
                 <div th:if="${error}" class="w-full text-red-800 text-sm text-center mt-4"><!-- Mostrar mensaje de error si existe -->
