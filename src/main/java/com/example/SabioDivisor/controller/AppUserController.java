@@ -35,7 +35,7 @@ public class AppUserController {
         if (loggedUser == null) {
             return "redirect:/login"; // Redirige al login si no hay usuario logueado
         }
-        model.addAttribute("user", service.findById(loggedUser.getId()));
+        model.addAttribute("user", service.findById(loggedUser.getId()));// No se pasa directamente el loggedUser, sino que se busca por ID porque es más robusto y seguro trabajar con un objeto directo de la BBDD.
         return "users/form";
     }
 
