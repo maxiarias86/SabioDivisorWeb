@@ -20,10 +20,10 @@
                 <p th:text="${error}"></p>
             </div>
 
-            <form th:action="@{/expenses/save}" method="post"
-                  class="bg-white p-6 rounded shadow-md w-full max-w-lg space-y-6"><!-- El max-width es mayor a otros formularios por la "descripción" -->
+            <form class="bg-white p-6 rounded shadow-md w-full max-w-lg space-y-6"
+                    th:action="@{/expenses/save}" method="post"><!-- No uso th:object, por eso paso cada campo con name y th:value. Spring lo setea al @ModelAttribute Expense automáticamente. -->
 
-                <input type="hidden" name="id" th:value="${expense.id}" />
+                <input type="hidden" name="id" th:value="${expense.id}" /><!-- ID del gasto (oculto), si ya lo tiene el objeto expense lo completa, sino será null -->
 
                 <div class="w-full flex flex-row items-center">
                     <label class="text-md font-medium text-blue-900 w-40">Monto total:</label>

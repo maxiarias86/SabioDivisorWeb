@@ -19,7 +19,6 @@
         <table class="w-full text-left text-sm border border-gray-300 rounded">
             <thead class="bg-gray-200">
             <tr>
-                <th class="p-2">ID</th>
                 <th class="p-2">Monto</th>
                 <th class="p-2">Deudor</th>
                 <th class="p-2">Acreedor</th>
@@ -30,7 +29,6 @@
             </thead>
             <tbody>
             <tr th:each="debt : ${debts}" class="border-t">
-                <td class="p-2" th:text="${debt.id}">1</td>
                 <td class="p-2"
                     th:text="'$' + ${#numbers.formatDecimal(debt.amount, 1, 'POINT', 2, 'COMMA')}">
                     $0,00

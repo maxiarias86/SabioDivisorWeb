@@ -25,7 +25,6 @@
                 <table class="w-full text-left text-sm border border-gray-300 rounded">
                     <thead class="bg-gray-200">
                         <tr>
-                            <th class="p-2">ID</th>
                             <th class="p-2">Monto</th>
                             <th class="p-2">Pagador</th>
                             <th class="p-2">Receptor</th>
@@ -36,8 +35,7 @@
 
                     <tbody>
                     <tr class="border-t" th:each="payment : ${payments}">
-                        <td class="p-2" th:text="${payment.id}">1</td>
-                        <td class="p-2" th:text="'$' + ${payment.amount} + '.-'">monto</td>
+                        <td class="p-2" th:text="'$' + ${#numbers.formatDecimal(payment.amount,1,'POINT',2,'COMMA')}">0.00</td>
                         <td class="p-2" th:text="${payment.payer.name}">Pagador</td>
                         <td class="p-2" th:text="${payment.recipient.name}">Receptor</td>
                         <td class="p-2" th:text="${#temporals.format(payment.date,'dd/MM/yyyy')}">Fecha</td>

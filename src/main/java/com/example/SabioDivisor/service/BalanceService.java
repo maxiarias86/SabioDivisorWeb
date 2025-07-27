@@ -42,7 +42,7 @@ public class BalanceService {
 
             Double balance = calculateBalance(paymentsBetween, debtsBetween, user);
 
-            if (balance != 0.0) {
+            if (Math.abs(balance) >= 0.01) { // Al haber muchas cuotas y pagos se crean errores de redondeo por lo que si se deja solo != 0, se mostrarían balances de 0.001 o -0.001 que no son significativos.
                 balances.add(new BalanceAmountDTO(friend, balance));
             }
         }
