@@ -1,0 +1,25 @@
+{
+  "name": "sabiodivisor",
+  "version": "1.0.0",
+  "description": "La aplicación implementa un sistema de validaciones y manejo de errores pensado para evitar que fallos lógicos rompan el flujo de ejecución, y al mismo tiempo brindar retroalimentación clara al usuario desde la interfaz web.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maxiarias86/SabioDivisorWeb.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maxiarias86/SabioDivisorWeb/issues"
+  },
+  "homepage": "https://github.com/maxiarias86/SabioDivisorWeb#readme",
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.11"
+  }
+}
