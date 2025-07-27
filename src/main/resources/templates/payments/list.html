@@ -40,7 +40,7 @@
                         <td class="p-2" th:text="'$' + ${payment.amount} + '.-'">monto</td>
                         <td class="p-2" th:text="${payment.payer.name}">Pagador</td>
                         <td class="p-2" th:text="${payment.recipient.name}">Receptor</td>
-                        <td class="p-2" th:text="${payment.date}">Fecha</td>
+                        <td class="p-2" th:text="${#temporals.format(payment.date,'dd/MM/yyyy')}">Fecha</td>
                         <td class="p-2">
                             <a class="text-yellow-500 hover:underline mr-2"
                                     th:href="@{'/payments/edit/' + ${payment.id}}">Editar</a> |

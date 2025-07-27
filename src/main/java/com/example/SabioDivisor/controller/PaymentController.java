@@ -17,10 +17,11 @@ import java.time.LocalDate;
 public class PaymentController {
 
     @Autowired
-    private PaymentService service;
+    private PaymentService paymentService;
 
     @Autowired
     private AppUserService userService;
+
 
 
     @GetMapping
@@ -29,17 +30,33 @@ public class PaymentController {
         AppUser loggedUser = (AppUser) session.getAttribute("loggedUser");
         if (loggedUser == null) {return "redirect:/login";}// Redirige al login si no hay usuario logueado
 
-        model.addAttribute("payments", service.findAllByUserId(loggedUser.getId()));
+        model.addAttribute("payments", paymentService.findAllByUserId(loggedUser.getId()));
         return "payments/list";
     }
 
     @GetMapping("/new")
-    public String add(Model model, HttpSession session) {
+    public String add(Model model, HttpSession session, @RequestParam(required = false) Long recipientId, @RequestParam(required = false) Double amount) {
 
         AppUser loggedUser = (AppUser) session.getAttribute("loggedUser");
         if (loggedUser == null) {return "redirect:/login";}// Redirige al login si no hay usuario logueado
 
-        model.addAttribute("payment", new Payment());
+        Payment payment = new Payment();// Crea un nuevo objeto Payment para el formulario
+        payment.setDate(LocalDate.now()); // Establece la fecha actual como fecha del pago
+
+        if (recipientId != null) {//Si se pasa un ID de destinatario, lo agrega al new Payment que va a mandar al formulario.
+            AppUser recipient = userService.findById(recipientId);
+            if (recipient != null) {// Si se pasa un ID erroneo por URL, recipient será null.
+                payment.setRecipient(recipient);
+                payment.setPayer(loggedUser); // Establece el pagador como el usuario logueado
+            } else {
+                model.addAttribute("error", "Usuario destinatario no encontrado.");
+            }
+        }
+        if (amount != null && amount < 0) {// Solo lo pasa cuando se adeuda al destinatario, por lo que el monto es negativo.
+            payment.setAmount(Math.abs(amount)); // Asegura que el monto sea positivo
+        }
+
+        model.addAttribute("payment", payment);
         model.addAttribute("users", userService.listAll()); // Para mostrar los usuarios en el formulario
         return "payments/form"; // Esto apunta a la vista Thymeleaf en src/main/resources/templates/payments/form.html
     }
@@ -50,7 +67,7 @@ public class PaymentController {
         AppUser loggedUser = (AppUser) session.getAttribute("loggedUser");
         if (loggedUser == null) {return "redirect:/login";}// Redirige al login si no hay usuario logueado
 
-        model.addAttribute("payment", service.findById(paymentId));
+        model.addAttribute("payment", paymentService.findById(paymentId));
         model.addAttribute("users", userService.listAll()); // Para mostrar los usuarios en el formulario
         return "payments/form";
     }
@@ -88,7 +105,7 @@ public class PaymentController {
             return "payments/form"; // Retorna al formulario si la fecha es nula
         }
         try{
-            service.save(payment);
+            paymentService.save(payment);
         } catch (IllegalArgumentException e) {// Captura excepciones de validación lanzadas por el PaymentService
             model.addAttribute("error", e.getMessage());
             return "payments/form"; // Retorna al formulario si hay un error de validación
@@ -100,7 +117,7 @@ public class PaymentController {
     public String delete(@PathVariable Long paymentId, HttpSession session) {
         AppUser loggedUser = (AppUser) session.getAttribute("loggedUser");
         if (loggedUser == null) {return "redirect:/login";}// Redirige al login si no hay usuario logueado
-        service.delete(paymentId);
+        paymentService.delete(paymentId);
         return "redirect:/payments";
     }
 

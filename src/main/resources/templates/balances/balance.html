@@ -18,6 +18,12 @@
             <h2 class="text-xl text-gray-700 font-medium mb-6"
                 th:text="'Saldo actual: $' + ${balanceDTO.balance}">Saldo: $0.00</h2>
 
+            <div class="mb-6 flex gap-4"
+            th:if="${balanceDTO.balance} < 0"><!-- Muestra el botón solo si el saldo es negativo -->
+                <a class="bg-blue-400 p-2 rounded-lg transition hover:bg-blue-600 text-white"
+                   th:href="@{/payments/new(recipientId=${balanceDTO.friend.id}, amount=${balanceDTO.getBalance()})}" th:text="'Saldar cuentas con '+ ${balanceDTO.friend.name}">Saldar cuentas con [amigo]</a>
+            </div>
+
             <form class="mb-8 flex items-center gap-2"
                     method="get" th:action="@{/balance/{id}(id=${balanceDTO.friend.id})}"><!-- Formulario para cambiar la fecha -->
                 <!--

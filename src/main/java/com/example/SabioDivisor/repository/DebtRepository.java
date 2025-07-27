@@ -26,7 +26,7 @@ public interface DebtRepository extends JpaRepository<Debt, Long> {
     )
     Long countByExpenseId(@Param("expenseId") Long expenseId,@Param("userId") Long userId);//cuenta si el usuario participó en al menos una deuda asociada al gasto.
 
-    List<Debt> findAllByExpenseId(Long expenseId);
+    List<Debt> findAllByExpenseIdOrderByDueDateDesc(Long expenseId);
 
     @Query(
             "SELECT d FROM Debt d " +

@@ -34,7 +34,7 @@ public class DebtService {
             throw new RuntimeException("El gasto con ID " + expenseId + " no existe"); // Lanza una excepción si el gasto no existe
         }
 
-        return debtRepository.findAllByExpenseId(expenseId);
+        return debtRepository.findAllByExpenseIdOrderByDueDateDesc(expenseId);
     }
 
 }
