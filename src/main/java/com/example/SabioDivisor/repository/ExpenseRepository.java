@@ -13,7 +13,7 @@ import java.util.List;
 public interface ExpenseRepository extends JpaRepository<Expense, Long> {
     @Query(
             "SELECT e FROM Expense e WHERE e.id IN(" +
-                    "SELECT d.expense.id FROM Debt d WHERE d.debtor.id = :userId OR d.creditor.id = :userId )"
+                    "SELECT d.expense.id FROM Debt d WHERE d.debtor.id = :userId OR d.creditor.id = :userId ORDER BY e.date DESC)"
     )
     List<Expense> findAllByUserId(@Param("userId") Long userId);
 }

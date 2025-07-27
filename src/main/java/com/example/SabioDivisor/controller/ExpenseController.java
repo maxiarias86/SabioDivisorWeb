@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/expenses")
@@ -110,6 +111,24 @@ public class ExpenseController {
                     }
                 }
             }
+            if(payers.isEmpty() || debtors.isEmpty()) {//Si no hay pagadores o deudores, se muestra un mensaje de error y se vuelve al formulario.
+                model.addAttribute("error", "Debe haber al menos un pagador y un deudor.");
+                model.addAttribute("expense", expense);
+                model.addAttribute("users", appUserService.listAll());
+                return "expenses/form";
+            }
+            if( expense.getAmount() != payers.values().stream().mapToDouble(Double::doubleValue).sum()) {//Si el monto del gasto no coincide con la suma de los pagos, se muestra un mensaje de error y se vuelve al formulario.
+                model.addAttribute("error", "El monto del gasto no coincide con la suma de los pagos.");
+                model.addAttribute("expense", expense);
+                model.addAttribute("users", appUserService.listAll());
+                return "expenses/form";
+            }
+            if(!payers.containsKey(loggedUser.getId()) || !debtors.containsKey(loggedUser.getId())) {
+                model.addAttribute("error", "No puedes agregar gastos en los cuales no participes.");
+                model.addAttribute("expense", expense);
+                model.addAttribute("users", appUserService.listAll());
+                return "expenses/form";
+            }
 
             expenseService.save(expense,payers,debtors);
             return "redirect:/expenses";
@@ -156,9 +175,17 @@ public class ExpenseController {
             payers.put(creditorId, (payers.getOrDefault(creditorId,0.0) + debt.getAmount()));// Si hay mas de una cuota el getOrDefault va a traer el monto de la iteración previa y acumula el de la nueva cuota, si es la primera o la ultima trae el default (0.0).
             debtors.put(debtorId, (debtors.getOrDefault(debtorId,0.0) + debt.getAmount()));// Lo mismo que arriba, pero para los deudores.
         }
+        List<AppUser> users = appUserService.listAll();
+        Map<Long, String> userIdToName = new HashMap<>();
 
+        for (AppUser user : users) {
+            userIdToName.put(user.getId(), user.getName());
+        }
+
+        model.addAttribute("users", users);
+        model.addAttribute("userIdToName", userIdToName);
+        model.addAttribute("users", users);
         model.addAttribute("expense", expense);
-        model.addAttribute("users", appUserService.listAll());
         model.addAttribute("payers", payers);
         model.addAttribute("debtors", debtors);
         return "expenses/form";

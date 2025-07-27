@@ -31,7 +31,7 @@ public interface DebtRepository extends JpaRepository<Debt, Long> {
     @Query(
             "SELECT d FROM Debt d " +
                     "WHERE ((d.debtor.id = :userId AND d.creditor.id = :friendId) OR (d.debtor.id = :friendId AND d.creditor.id = :userId)) " +
-                    "AND d.dueDate <= :date ORDER BY d.expense.date DESC"
+                    "AND d.dueDate <= :date ORDER BY d.dueDate DESC"
     )
     List<Debt> findByPayerOrRecipient(@Param("userId") Long userId, @Param("friendId") Long friendId, @Param("date") LocalDate date);
 

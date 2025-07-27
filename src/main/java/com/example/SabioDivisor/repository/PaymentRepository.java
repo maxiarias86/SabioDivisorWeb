@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
-    @Query("SELECT p FROM Payment p WHERE p.payer.id = :id OR p.recipient.id = :id")
+    @Query("SELECT p FROM Payment p WHERE p.payer.id = :id OR p.recipient.id = :id ORDER BY p.date DESC")
     List<Payment> findAllByUserId(@Param("id") Long id);
 
     @Query(

@@ -44,7 +44,9 @@
                             for="date">Fecha:
                     </label>
                     <input class="flex-1 bg-gray-100 rounded p-2"
-                            type="date" id="date" th:field="*{date}" required/>
+                           type="date" id="date" name="date"
+                           th:value="${#temporals.format(payment.date, 'yyyy-MM-dd')}" required/>
+
                 </div>
 
                 <div class="w-full flex flex-row items-center">

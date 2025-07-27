@@ -42,22 +42,7 @@ public class AppUserController {
     @PostMapping("/save")
     public String save(AppUser user) {
         service.save(user);
-        return "redirect:/users"; // Redirige a la lista de usuarios después de guardar
+        return "redirect:/login"; // Redirige a la lista de usuarios después de guardar
     }
-
-    /*
-    No se puede eliminar usuarios.
-    @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id) {
-        service.delete(id);
-        return "redirect:/users"; // Redirige a la lista de usuarios después de eliminar
-    }
-
-    @GetMapping("/edit/{id}")
-    public String edit(Model model, @PathVariable Long id) {
-        model.addAttribute("user", service.findById(id));
-        return "users/form";
-    }
- */
-
+    //No se puede eliminar usuarios.
 }
