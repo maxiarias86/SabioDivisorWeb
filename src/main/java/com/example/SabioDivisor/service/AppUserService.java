@@ -22,6 +22,11 @@ public class AppUserService {
         // Siempre encripta la contraseña, incluso si ya está encriptada. Por eso debe validar antes de llamar a este metodo.
         String hashedPassword = BCrypt.withDefaults().hashToString(10, appUser.getPassword().toCharArray());
         appUser.setPassword(hashedPassword);
+        if (appUser.getId() == null) {//Si el ID es nulo, es un nuevo usuario.
+            if (repository.findByEmail(appUser.getEmail()) != null) {// Si ya existe un usuario con ese email, lanza una excepción.
+                throw new IllegalArgumentException("Ya existe un usuario con ese email.");// Esto es una validación para evitar mails duplicados.
+            }
+        }
         return repository.save(appUser);
     }
 

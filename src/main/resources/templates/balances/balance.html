@@ -16,7 +16,7 @@
                 th:text="'Balance con ' + ${balanceDTO.friend.name} + ' al ' + ${#temporals.format(date, 'dd/MM/yyyy')}">Balance con [nombre]</h1>
 
             <h2 class="text-xl text-gray-700 font-medium mb-6"
-                th:text="'Saldo actual: $' + ${balanceDTO.balance}">Saldo: $0.00</h2>
+                th:text="'Saldo actual: $' + ${#numbers.formatDecimal(balanceDTO.balance,1,'POINT',2,'COMMA')}">Saldo: $0.00</h2>
 
             <div class="mb-6 flex gap-4"
             th:if="${balanceDTO.balance} < 0"><!-- Muestra el botón solo si el saldo es negativo -->
@@ -70,6 +70,8 @@
                 <table class="w-full text-left text-sm border border-gray-300 rounded">
                     <thead class="bg-gray-200">
                     <tr>
+                        <th class="p-2">Descripción</th>
+                        <th class="p-2">Cuota</th>
                         <th class="p-2">Vencimiento</th>
                         <th class="p-2">Monto</th>
                         <th class="p-2">Deudor</th>
@@ -78,6 +80,8 @@
                     </thead>
                     <tbody>
                     <tr th:each="d : ${balanceDTO.debts}" class="border-t"><!-- for each en thymeleaf -->
+                        <td class="p-2" th:text="${d.expense.description}">Motivo del gasto</td>
+                        <td class="p-2" th:text="${d.installmentNumber}">2</td>
                         <td class="p-2" th:text="${#temporals.format(d.dueDate, 'dd/MM/yyyy')}">01-12-2025</td>
                         <!-- #temporals.format se usa para formatear la fecha en el formato dd/MM/yyyy -->
                         <td class="p-2" th:text="'$' + ${#numbers.formatDecimal(d.amount,1,'POINT',2,'COMMA')}">$200,00</td>

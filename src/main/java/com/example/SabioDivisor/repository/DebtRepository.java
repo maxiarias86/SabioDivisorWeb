@@ -35,6 +35,9 @@ public interface DebtRepository extends JpaRepository<Debt, Long> {
     )
     List<Debt> findByPayerOrRecipient(@Param("userId") Long userId, @Param("friendId") Long friendId, @Param("date") LocalDate date);
 
+    @Query("SELECT d FROM Debt d WHERE ((d.debtor.id = :userId OR d.creditor.id = :userId) AND d.expense.id = :expenseId) ORDER BY d.dueDate DESC")
+    List<Debt> findByExpenseIdAndUserId(@Param("userId") Long userId, @Param("expenseId") Long expenseId); // Busca deudas de un usuario en un gasto específico que no hayan vencido aún. Se usa en ExpenseService para mostrar las deudas de un usuario en un gasto específico.
+
 
 }
 

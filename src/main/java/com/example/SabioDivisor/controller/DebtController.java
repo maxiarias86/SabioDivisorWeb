@@ -23,7 +23,8 @@ public class DebtController {
 
     @GetMapping("/list/{expenseId}")
     public String list(Model model, HttpSession session, @PathVariable Long expenseId) {
-        if (session.getAttribute("loggedUser") == null) {
+        AppUser loggedUser = (AppUser) session.getAttribute("loggedUser");
+        if (loggedUser == null) {
             return "redirect:/login"; // Redirige al login si el usuario no está logueado
         }
 
@@ -37,7 +38,7 @@ public class DebtController {
             return "debts/list"; // Retorna a la vista de lista de deudas con el mensaje de error
         }
 
-        model.addAttribute("debts", debtService.findDebtsByExpenseId(expenseId));
+        model.addAttribute("debts", debtService.findDebtsByExpenseIdAndUserId(loggedUser.getId(),expenseId));
         return "debts/list"; // Esto apunta a la vista Thymeleaf en src/main/resources/templates/debts/list.html
     }
 

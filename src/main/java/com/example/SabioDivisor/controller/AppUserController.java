@@ -6,10 +6,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/users")
@@ -40,9 +37,32 @@ public class AppUserController {
     }
 
     @PostMapping("/save")
-    public String save(AppUser user) {
-        service.save(user);
-        return "redirect:/login"; // Redirige a la lista de usuarios después de guardar
+    public String save(@ModelAttribute AppUser user, Model model) {
+        try{
+            // Validación de campos obligatorios
+            if (user.getEmail() == null || user.getEmail().isBlank()) {
+                model.addAttribute("error", "El email es obligatorio.");
+                model.addAttribute("user", user);
+                return "users/form";
+            }
+            if (user.getName() == null || user.getName().isBlank()) {
+                model.addAttribute("error", "El nombre es obligatorio.");
+                model.addAttribute("user", user);
+                return "users/form";
+            }
+
+            if (user.getPassword() == null || user.getPassword().isBlank()) {
+                model.addAttribute("error", "La contraseña es obligatoria.");
+                model.addAttribute("user", user);
+                return "users/form";
+            }
+            service.save(user);
+            return "redirect:/login"; // Redirige a la lista de usuarios después de guardar
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage()); // Agrega el mensaje de error al modelo
+            model.addAttribute("user", user); // Vuelve a mostrar el formulario con los datos ingresados
+            return "users/form";
+        }
     }
     //No se puede eliminar usuarios.
 }

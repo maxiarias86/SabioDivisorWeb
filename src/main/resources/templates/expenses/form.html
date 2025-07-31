@@ -26,15 +26,15 @@
                 <input type="hidden" name="id" th:value="${expense.id}" /><!-- ID del gasto (oculto), si ya lo tiene el objeto expense lo completa, sino será null -->
 
                 <div class="w-full flex flex-row items-center">
-                    <label class="text-md font-medium text-blue-900 w-40">Monto total:</label>
-                    <input class="flex-1 bg-gray-100 rounded p-2" type="number" step="0.01" name="amount"
-                           th:value="${expense.amount}" required/>
-                </div>
-
-                <div class="w-full flex flex-row items-center">
                     <label class="text-md font-medium text-blue-900 w-40">Descripción:</label>
                     <input class="flex-1 bg-gray-100 rounded p-2" type="text" name="description"
                            th:value="${expense.description}" required/>
+                </div>
+
+                <div class="w-full flex flex-row items-center">
+                    <label class="text-md font-medium text-blue-900 w-40">Monto total:</label>
+                    <input class="flex-1 bg-gray-100 rounded p-2" type="number" step="0.01" name="amount"
+                           th:value="${expense.amount}" required/>
                 </div>
 
                 <div class="w-full flex flex-row items-center">
@@ -50,7 +50,7 @@
                 </div>
 
                 <div>
-                    <h3 class="text-lg font-semibold text-blue-800 mb-2">Pagadores</h3>
+                    <h3 class="text-lg font-semibold text-blue-800 mb-2">Cuánto pagó cada uno?</h3>
 
                     <div class="flex items-center gap-2 mb-4"><!-- Selector + input + botón -->
                         <select id="select-payer" class="bg-gray-100 rounded p-2 flex-1">
@@ -85,7 +85,7 @@
 
                 <!-- Sección dinámica de Deudores -->
                 <div class="mt-8">
-                    <h3 class="text-lg font-semibold text-blue-800 mb-2">Deudores</h3>
+                    <h3 class="text-lg font-semibold text-blue-800 mb-2">Cuánto debía pagar cada uno?</h3>
                     <!-- Selector + input + botón -->
                     <div class="flex items-center gap-2 mb-4">
                         <select id="select-debtor" class="bg-gray-100 rounded p-2 flex-1">

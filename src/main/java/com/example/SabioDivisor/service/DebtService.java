@@ -6,6 +6,7 @@ import com.example.SabioDivisor.repository.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -35,6 +36,17 @@ public class DebtService {
         }
 
         return debtRepository.findAllByExpenseIdOrderByDueDateDesc(expenseId);
+    }
+
+    public List<Debt> findDebtsByExpenseIdAndUserId(Long userId, Long expenseId) {
+        if (userId == null || expenseId == null) {
+            throw new RuntimeException("Faltan parámetros para buscar deudas"); // Lanza una excepción si falta algún parámetro
+        }
+        if (!expenseRepository.existsById(expenseId)) {
+            throw new RuntimeException("El gasto con ID " + expenseId + " no existe"); // Lanza una excepción si el gasto no existe
+        }
+
+        return debtRepository.findByExpenseIdAndUserId(userId, expenseId);
     }
 
 }
