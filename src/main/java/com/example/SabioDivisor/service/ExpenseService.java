@@ -179,7 +179,10 @@ public class ExpenseService {
 
     public boolean userParticipatedInExpense(AppUser user, Long expenseId) {
         if (user == null || user.getId() == null) {
-            return false; // Retorna false si el usuario es nulo o no tiene ID
+            throw new IllegalArgumentException("Usuario inválido.");
+        }
+        if (expenseId == null) {
+            throw new IllegalArgumentException("ID de gasto inválido.");
         }
         return debtRepository.countByExpenseId(expenseId, user.getId()) > 0;
     }

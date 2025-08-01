@@ -26,13 +26,18 @@ public class LoginController {
         /*
         HttpSession es una interfaz que permite almacenar información del usuario sin tener que pasarla por la URL.
          */
-        AppUser user = userService.validateCredentials(email, password);
-        if (user == null) {
-            model.addAttribute("error", "Email o contraseña incorrectos");
-            return "login";//Si las credenciales son incorrectas, se muestra el mensaje de error y se vuelve al formulario de inicio de sesión.
+        try{
+            AppUser user = userService.validateCredentials(email, password);
+            if (user == null) {
+                model.addAttribute("error", "Email o contraseña incorrectos");
+                return "login";//Si las credenciales son incorrectas, se muestra el mensaje de error y se vuelve al formulario de inicio de sesión.
+            }
+            session.setAttribute("loggedUser", user);
+            return "redirect:/index"; // Redirige a la página de inicio después de un inicio de sesión exitoso.
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", "Error al iniciar sesión: " + e.getMessage());
+            return "login"; // Si ocurre un error, se muestra el mensaje de error y se vuelve al formulario de inicio de sesión.
         }
-        session.setAttribute("loggedUser", user);
-        return "redirect:/index"; // Redirige a la página de inicio después de un inicio de sesión exitoso.
     }
 
     @GetMapping("/logout")

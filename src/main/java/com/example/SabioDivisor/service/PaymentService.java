@@ -23,14 +23,8 @@ public class PaymentService {
     }
 
     public Payment save(Payment payment) {
-        if (
-                payment == null
-                        || payment.getPayer() == null
-                        || payment.getAmount() <= 0
-                        || payment.getRecipient() == null
-                        || payment.getDate() == null
-        ) {
-            throw new IllegalArgumentException("Datos del pago inválidos");
+        if (payment == null || payment.getPayer() == null || payment.getAmount() <= 0 || payment.getRecipient() == null || payment.getDate() == null) {
+            throw new IllegalArgumentException("Datos del pago inválidos");//Lanza errores en la capa Service que seran capturados en la capa Controller
         }
         if (payment.getDate().isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("El pago no puede ser futuro");

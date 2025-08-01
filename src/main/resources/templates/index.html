@@ -21,6 +21,10 @@
         <button type="submit" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Actualizar</button>
       </form>
 
+      <div th:if="${error}" class="w-full max-w-3xl text-center text-red-800 text-sm mb-4">
+        <p th:text="${error}"></p>
+      </div>
+
       <h2 class="text-xl font-semibold text-gray-700 mb-4">Mi balance con otros usuarios</h2>
 
       <div class="w-full max-w-3xl">

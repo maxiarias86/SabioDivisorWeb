@@ -43,12 +43,18 @@ public class BalanceController {
             return "redirect:/index"; // Redirige a la página de inicio si el amigo no existe
         }
 
-        BalanceDTO balanceDTO = balanceService.getBalanceDTO(user, friend, date);
+        try{
+            BalanceDTO balanceDTO = balanceService.getBalanceDTO(user, friend, date);
 
-        model.addAttribute("date", date);
-        model.addAttribute("user", user);
-        model.addAttribute("balanceDTO", balanceDTO);
+            model.addAttribute("date", date);
+            model.addAttribute("user", user);
+            model.addAttribute("balanceDTO", balanceDTO);
 
-        return "balances/balance"; // Esto renderiza templates/balance.html
+            return "balances/balance"; // Esto renderiza templates/balance.html
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
+            return "redirect:/index"; // Redirige a la página de inicio si hay un error
+        }
+
     }
 }

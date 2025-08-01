@@ -30,6 +30,14 @@ public class BalanceService {
     public BalanceService() {}
 
     public List<BalanceAmountDTO> getUserBalances(AppUser user, LocalDate date) {
+
+        if (user == null) {
+            throw new IllegalArgumentException("El usuario no puede ser nulo");
+        }
+        if (date == null) {
+            throw new IllegalArgumentException("La fecha no puede ser nula");
+        }
+
         List<BalanceAmountDTO> balances = new ArrayList<>();
         List<AppUser> friends = appUserRepository.findAll();
 
@@ -48,17 +56,6 @@ public class BalanceService {
         }
         return balances;
     }
-
-    public Double getBalanceBetweenUsers(AppUser user, AppUser friend, LocalDate date) {
-        Double balance = 0.0;
-
-        List<Payment> paymentsBetween = this.findPaymentsBetweenUsers(user, friend, date);
-        List<Debt> debtsBetween = this.findDebtsBetweenUsers(user, friend, date);
-
-        // Calcula el balance entre el usuario y su amigo hasta la fecha especificada
-        return calculateBalance(paymentsBetween, debtsBetween, user);
-    }
-
 
     public List<Debt> findDebtsBetweenUsers(AppUser user, AppUser friend, LocalDate date) {
         return debtRepository.findByPayerOrRecipient(user.getId(), friend.getId(), date);
@@ -91,6 +88,9 @@ public class BalanceService {
     }
 
     public BalanceDTO getBalanceDTO(AppUser user, AppUser friend, LocalDate date) {
+        if( user == null || friend == null || date == null) {
+            throw new IllegalArgumentException("El usuario, amigo o fecha no pueden ser nulos");
+        }
         List<Payment> paymentsBetween = this.findPaymentsBetweenUsers(user, friend, date);
         List<Debt> debtsBetween = this.findDebtsBetweenUsers(user, friend, date);
 
@@ -98,5 +98,16 @@ public class BalanceService {
 
         return new BalanceDTO(friend, balance, debtsBetween, paymentsBetween);
     }
+    /*
+        public Double getBalanceBetweenUsers(AppUser user, AppUser friend, LocalDate date) {
+        Double balance = 0.0;
+
+        List<Payment> paymentsBetween = this.findPaymentsBetweenUsers(user, friend, date);
+        List<Debt> debtsBetween = this.findDebtsBetweenUsers(user, friend, date);
+
+        // Calcula el balance entre el usuario y su amigo hasta la fecha especificada
+        return calculateBalance(paymentsBetween, debtsBetween, user);
+    }
+     */
 
 }

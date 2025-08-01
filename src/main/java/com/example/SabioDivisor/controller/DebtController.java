@@ -28,18 +28,19 @@ public class DebtController {
             return "redirect:/login"; // Redirige al login si el usuario no está logueado
         }
 
-        if (expenseId == null) {
-            model.addAttribute("error", "Falta el ID del gasto"); // Agrega un mensaje de error si el ID del gasto es nulo
+        try{
+            if (!expenseService.userParticipatedInExpense((AppUser) session.getAttribute("loggedUser"), expenseId)) {//Si el expenseId es null lanza una IllegalArgumentException en el Service
+                model.addAttribute("error", "El usuario no participó en el gasto con ID " + expenseId);
+                return "debts/list"; // Retorna a la vista de lista de deudas con el mensaje de error
+            }
+
+            model.addAttribute("debts", debtService.findDebtsByExpenseIdAndUserId(loggedUser.getId(),expenseId));
+            return "debts/list"; // Esto apunta a la vista Thymeleaf en src/main/resources/templates/debts/list.html
+
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
             return "debts/list"; // Retorna a la vista de lista de deudas con el mensaje de error
         }
-
-        if (!expenseService.userParticipatedInExpense((AppUser) session.getAttribute("loggedUser"), expenseId)) {
-            model.addAttribute("error", "El usuario no participó en el gasto con ID " + expenseId);
-            return "debts/list"; // Retorna a la vista de lista de deudas con el mensaje de error
-        }
-
-        model.addAttribute("debts", debtService.findDebtsByExpenseIdAndUserId(loggedUser.getId(),expenseId));
-        return "debts/list"; // Esto apunta a la vista Thymeleaf en src/main/resources/templates/debts/list.html
     }
 
 

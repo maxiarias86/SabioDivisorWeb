@@ -178,25 +178,19 @@ public class ExpenseController {
             model.addAttribute("expenses", expenseService.findAllByUser(loggedUser));
             return "expenses/list";
         }
-        if(!expenseService.userParticipatedInExpense(loggedUser, expense.getId())) {
-            model.addAttribute("error", "No puedes editar un gasto en el que no participaste.");
+        try{
+            if(!expenseService.userParticipatedInExpense(loggedUser, expense.getId())) {
+                model.addAttribute("error", "No puedes editar un gasto en el que no participaste.");
+                model.addAttribute("expenses", expenseService.findAllByUser(loggedUser));
+                return "expenses/list";
+            }
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
             model.addAttribute("expenses", expenseService.findAllByUser(loggedUser));
             return "expenses/list";
         }
-        //CONTINUA EL FLUJO
 
-        //AGREGA LAS DEUDAS Y PAGOS AL GASTO PARA QUE SE MUESTREN EN EL FORMULARIO DE EDICIÓN.
-        Map<Long, Double> payers = new HashMap<>();
-        Map<Long, Double> debtors = new HashMap<>();
-        List<Debt> debts = debtService.findDebtsByExpenseId(expense.getId());
 
-        for (Debt debt : debts) {
-            Long creditorId = debt.getCreditor().getId();
-            Long debtorId = debt.getDebtor().getId();
-
-            payers.put(creditorId, (payers.getOrDefault(creditorId,0.0) + debt.getAmount()));// Si hay mas de una cuota el getOrDefault va a traer el monto de la iteración previa y acumula el de la nueva cuota, si es la primera o la ultima trae el default (0.0).
-            debtors.put(debtorId, (debtors.getOrDefault(debtorId,0.0) + debt.getAmount()));// Lo mismo que arriba, pero para los deudores.
-        }
         List<AppUser> users = appUserService.listAll();
         Map<Long, String> userIdToName = new HashMap<>();
 
@@ -208,8 +202,7 @@ public class ExpenseController {
         model.addAttribute("userIdToName", userIdToName);
         model.addAttribute("users", users);
         model.addAttribute("expense", expense);
-        model.addAttribute("payers", payers);
-        model.addAttribute("debtors", debtors);
+
         return "expenses/form";
     }
 
@@ -227,8 +220,18 @@ public class ExpenseController {
             redirectAttributes.addFlashAttribute("error", "Gasto no encontrado.");
             return "redirect:/expenses";
         }
-        if(!expenseService.userParticipatedInExpense(loggedUser, expense.getId())) {
-            redirectAttributes.addFlashAttribute("error", "No puedes eliminar un gasto en el que no participaste.");
+        /*
+            Flash attributes permiten pasar atributos (datos con clave-valor) durante un redirect. El model.addAttribute(...) no funciona porque los atributos se pierden al redirigir.
+            Se usan con redirectAttributes.addFlashAttribute(...) y están disponibles solo en la siguiente solicitud.
+        */
+
+        try {
+            if(!expenseService.userParticipatedInExpense(loggedUser, expense.getId())) {
+                redirectAttributes.addFlashAttribute("error", "No puedes eliminar un gasto en el que no participaste.");
+                return "redirect:/expenses";
+            }
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/expenses";
         }
         //CONTINUA EL FLUJO
