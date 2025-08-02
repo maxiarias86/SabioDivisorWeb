@@ -78,7 +78,7 @@ public class BalanceService {
     public List<Payment> findPaymentsBetweenUsers(AppUser user, AppUser friend, LocalDate date) {
         return paymentRepository.findByPayerOrRecipient(user.getId(), friend.getId(), date);
     }
-
+//Este metodo podría ser privado, ya que solo se usa dentro de la clase BalanceService pero para permitir su uso en las pruebas unitarias se deja como público.
     public Double calculateBalance (List<Payment> payments, List<Debt> debts, AppUser user) {
         Double balance = 0.0;
 
