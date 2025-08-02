@@ -16,7 +16,7 @@
                 th:text="'Balance con ' + ${balanceDTO.friend.name} + ' al ' + ${#temporals.format(date, 'dd/MM/yyyy')}">Balance con [nombre]</h1>
 
             <h2 class="text-xl text-gray-700 font-medium mb-6"
-                th:text="'Saldo actual: $' + ${#numbers.formatDecimal(balanceDTO.balance,1,'POINT',2,'COMMA')}">Saldo: $0.00</h2>
+                th:text="'Saldo: $' + ${#numbers.formatDecimal(balanceDTO.balance,1,'POINT',2,'COMMA')}">Saldo: $0.00</h2>
 
             <div class="mb-6 flex gap-4"
             th:if="${balanceDTO.balance} < 0"><!-- Muestra el botón solo si el saldo es negativo -->

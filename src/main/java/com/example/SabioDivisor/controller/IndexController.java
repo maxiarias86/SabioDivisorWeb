@@ -42,6 +42,7 @@ public class IndexController {
         model.addAttribute("date", date);
         model.addAttribute("user", user);
         try{
+            model.addAttribute("balance", balanceService.getBalance(balanceService.getUserBalances(user, date)));
             model.addAttribute("balances", balanceService.getUserBalances(user, date)); // Obtiene los balances del usuario actual
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", e.getMessage());

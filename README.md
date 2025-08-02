@@ -105,7 +105,7 @@ CU07 – Ver estado de cuenta a una fecha: Permite calcular un balance proyectad
 
 1. Clonar el repositorio o descomprimir el ZIP.
 
-2. Crear una base de datos MySQL llamada `sabiodivisor`.
+2. Crear una base de datos MySQL llamada `sabio_divisor-spring`.
 
    Para facilitar la instalación, se incluye el archivo `sabiodivisor.sql` en la carpeta raíz del repositorio.
 

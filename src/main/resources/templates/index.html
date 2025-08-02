@@ -15,6 +15,10 @@
     <main class="flex flex-col items-center px-6 py-8 flex-grow">
       <h2 class="text-3xl font-bold text-blue-700 text-center mb-6" th:text="'¡Bienvenido, ' + ${user.name} + '!'">¡Bienvenido!</h2>
 
+      <h2 class="text-xl text-gray-700 font-medium mb-6"
+          th:text="'Saldo: $' + ${#numbers.formatDecimal(balance,1,'POINT',2,'COMMA')}">Saldo: $0.00</h2>
+
+
       <form method="get" action="/index" class="mb-6 flex items-center gap-2">
         <label for="date" class="text-gray-700 font-medium">Ver balances hasta:</label>
         <input type="date" name="date" id="date" th:value="${date}" class="rounded px-2 py-1 border border-gray-300" />

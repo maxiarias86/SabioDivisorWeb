@@ -12,10 +12,10 @@ import java.util.List;
 public class AppUserService {
 
     @Autowired
-    private AppUserRepository repository;
+    private AppUserRepository appUserRepository;
 
     public List<AppUser> listAll() {
-        return repository.findAll();
+        return appUserRepository.findAll();
     }
 
     public AppUser save(AppUser appUser) {
@@ -33,19 +33,24 @@ public class AppUserService {
         String hashedPassword = BCrypt.withDefaults().hashToString(10, appUser.getPassword().toCharArray());
         appUser.setPassword(hashedPassword);
         if (appUser.getId() == null) {//Si el ID es nulo, es un nuevo usuario.
-            if (repository.findByEmail(appUser.getEmail()) != null) {// Si ya existe un usuario con ese email, lanza una excepción.
+            if (appUserRepository.findByEmail(appUser.getEmail()) != null) {// Si ya existe un usuario con ese email, lanza una excepción.
                 throw new IllegalArgumentException("Ya existe un usuario con ese email.");// Esto es una validación para evitar mails duplicados.
             }
         }
-        return repository.save(appUser);
+        AppUser u = appUserRepository.findByEmail(appUser.getEmail());
+        if (u != null && !u.getId().equals(appUser.getId())) {
+                throw  new IllegalArgumentException("Ya existe un usuario con ese email.");
+            }
+
+        return appUserRepository.save(appUser);
     }
 
     public AppUser findById(Long id) {
-        return repository.findById(id).orElse(null);
+        return appUserRepository.findById(id).orElse(null);
     }
 
     public AppUser findByEmail(String email) {
-        return repository.findByEmail(email);
+        return appUserRepository.findByEmail(email);
     }
 
     public AppUser validateCredentials(String email, String password) {
