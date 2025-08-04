@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller
+@Controller//Es un controlador de Spring MVC que maneja solicitudes web y devuelve vistas. Escucha todas las solicitudes que empiezan con /debts
 @RequestMapping("/debts")
 public class DebtController {
 
-    @Autowired
+    @Autowired//Inyección de dependencia del DebtService. Crea automáticamente una instancia de esta clase en el Controller.
     private DebtService debtService;
 
     @Autowired

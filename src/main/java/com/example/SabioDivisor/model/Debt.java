@@ -4,23 +4,23 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
-@Entity
+@Entity//Significa que esta clase es una entidad JPA, lo que significa que se corresponde con una tabla (nombre por defecto: "debt") de la BBDD.
 public class Debt {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id//Indica que este campo es la clave primaria de la entidad.
+    @GeneratedValue(strategy = GenerationType.IDENTITY)//Le dice a JPA que genere el valor automáticamente
     private Long id;
 
     private double amount;
 
-    @ManyToOne
-    @JoinColumn(name = "debtor_id", nullable = false)
+    @ManyToOne//Cada deuda tiene un solo AppUser como deudor. Un deudor puede tener muchas deudas.
+    @JoinColumn(name = "debtor_id", nullable = false)//Indica que este campo es una clave foránea que referencia a la tabla AppUser. El nombre de la columna en esta tabla será "debtor_id". No puede ser nulo. Sería como un REFERENCES en SQL.
     private AppUser debtor;
 
     @ManyToOne
     @JoinColumn(name = "creditor_id", nullable = false)
     private AppUser creditor;
 
-    @ManyToOne
+    @ManyToOne//Cada deuda está asociada a un solo gasto. Un gasto puede tener muchas deudas.
     @JoinColumn(name = "expense_id", nullable = false)
     private Expense expense;
 

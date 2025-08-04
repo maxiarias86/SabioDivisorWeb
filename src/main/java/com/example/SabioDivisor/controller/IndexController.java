@@ -30,7 +30,7 @@ public class IndexController {
     }
 
     @GetMapping("/index")
-    public String index(HttpSession session, Model model, @RequestParam(required = false) LocalDate date) {// required=false permite que la fecha sea opcional, si no se pasa, se usa la fecha actual. Se puede pasar en la URL como ?date=YYYY-MM-DD
+    public String index(HttpSession session, Model model, @RequestParam(required = false) LocalDate date) {//required=false permite que la fecha sea opcional, si no se pasa, se usa la fecha actual. Se puede pasar en la URL como ?date=YYYY-MM-DD
         AppUser user = (AppUser) session.getAttribute("loggedUser");
         if (user == null) {
             return "redirect:/login";

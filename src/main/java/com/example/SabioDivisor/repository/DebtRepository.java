@@ -16,9 +16,7 @@ public interface DebtRepository extends JpaRepository<Debt, Long> {
 
     @Modifying//Indica que este metodo modifica la base de datos, por lo que se debe usar dentro de una transacción.
     @Transactional//Indica que este metodo debe ejecutarse dentro de una transacción. Si algo falla, se revertirá lo que se haya hecho en la transacción.
-    @Query(
-            "DELETE FROM Debt d WHERE d.expense.id = :expenseId"
-    )
+    @Query("DELETE FROM Debt d WHERE d.expense.id = :expenseId")//Query en Java Persistence Query Language (JPQL). Similar a SQL pero con la sintaxis de las entidades de JPA.
     void deleteByExpenseId(Long expenseId);//Elimina todas las deudas asociadas a un gasto. Se usa en ExpenseService para eliminar las deudas al eliminar o editar un gasto.
 
     @Query(
