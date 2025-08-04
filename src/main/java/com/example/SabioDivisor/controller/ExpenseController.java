@@ -1,10 +1,8 @@
 package com.example.SabioDivisor.controller;
 
 import com.example.SabioDivisor.model.AppUser;
-import com.example.SabioDivisor.model.Debt;
 import com.example.SabioDivisor.model.Expense;
 import com.example.SabioDivisor.service.AppUserService;
-import com.example.SabioDivisor.service.DebtService;
 import com.example.SabioDivisor.service.ExpenseService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/expenses")
@@ -26,9 +22,6 @@ public class ExpenseController {
 
     @Autowired
     private ExpenseService expenseService;
-
-    @Autowired
-    private DebtService debtService;
 
     @Autowired
     private AppUserService appUserService;
@@ -49,7 +42,7 @@ public class ExpenseController {
         if (loggedUser == null) {
             return "redirect:/login";
         }
-        //Agrega los Maps para los pagadores y deudores, porque el html los espera para mostrar los campos de pago y deuda en el caso que sea edicion.
+        //Agrega los Maps para los pagadores y deudores, porque el html los espera para mostrar los campos de pago y deuda en el caso de que sea edición.
         model.addAttribute("payers", new HashMap<Long, Double>());
         model.addAttribute("debtors", new HashMap<Long, Double>());
 
@@ -63,7 +56,7 @@ public class ExpenseController {
     public String saveExpense(//Devuelve un String porque es el nombre de la vista a mostrar después de guardar el gasto.
             @ModelAttribute Expense expense, //Anotación para que Spring llene un objeto Expense con los valores del formulario
             Model model,//Es el contenedor de datos que se enviarán a la vista. model.addAttribute("expense", expense); Agrega el objeto Expense al modelo para que esté disponible en la vista. Se le puede pasar mensajes de error, éxito, etc.
-            HttpSession session,//HttpSession es una interfaz estandar de Java que permite acceder a la sesión del usuario actual.
+            HttpSession session,//HttpSession es una interfaz estándar de Java que permite acceder a la sesión del usuario actual.
             @RequestParam Map<String, String> params) {//Captura los parámetros del formulario como un Map key-value {"amount":"25000","payer_1":"20000","payer_2:"5000"}.
 
         AppUser loggedUser = (AppUser) session.getAttribute("loggedUser");
@@ -93,10 +86,10 @@ public class ExpenseController {
             return "expenses/form";
         }
 
-        Map<Long,Double> payers = new HashMap<>();//Va a contener el id del pagador y el monto que pago. Ej: {1L:20000, 2L:5000}
+        Map<Long,Double> payers = new HashMap<>();//Va a contener el id del pagador y el monto que pago. Ej.: {1L:20000, 2L:5000}
         Map<Long,Double> debtors = new HashMap<>();
         /*
-        El código JS del front crea muchos campos de formulario con nombres que empiezan con "payer_" o "debtor_". Ej: <input type="hidden" name="debtor_5" value="900.0">
+        El código JS del front crea muchos campos de formulario con nombres que empiezan con "payer_" o "debtor_". Ej.: <input type="hidden" name="debtor_5" value="900.0">
         El metodo recibe esos parámetros como un Map<String, String> params, donde la clave es el nombre del campo y el valor es el valor del campo.
         Ej: {
           "amount": "2400.0",
@@ -207,7 +200,7 @@ public class ExpenseController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(Model model,@PathVariable Long id, HttpSession session, RedirectAttributes redirectAttributes) {
+    public String delete(@PathVariable Long id, HttpSession session, RedirectAttributes redirectAttributes) {
         AppUser loggedUser = (AppUser) session.getAttribute("loggedUser");
         if (loggedUser == null) {
             return "redirect:/login";
@@ -237,7 +230,7 @@ public class ExpenseController {
         //CONTINUA EL FLUJO
 
         expenseService.delete(expense.getId());
-        redirectAttributes.addFlashAttribute("success", "Gasto eliminado correctamente.");//redirect.Atributtes.addFlashAttribute: Guarda temporalmente un atributo (ej. "error") y lo pasa al siguiente redirect. Es "flash" porque se elimina después de que se muestra una vez.
+        redirectAttributes.addFlashAttribute("success", "Gasto eliminado correctamente.");//redirect.Attributes.addFlashAttribute: Guarda temporalmente un atributo (ej. "error") y lo pasa al siguiente redirect. Es "flash" porque se elimina después de que se muestra una vez.
         return "redirect:/expenses";
     }
 

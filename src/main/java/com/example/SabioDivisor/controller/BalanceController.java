@@ -2,8 +2,6 @@ package com.example.SabioDivisor.controller;
 
 import com.example.SabioDivisor.dto.BalanceDTO;
 import com.example.SabioDivisor.model.AppUser;
-import com.example.SabioDivisor.model.Debt;
-import com.example.SabioDivisor.model.Payment;
 import com.example.SabioDivisor.service.AppUserService;
 import com.example.SabioDivisor.service.BalanceService;
 import jakarta.servlet.http.HttpSession;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Controller
 public class BalanceController {

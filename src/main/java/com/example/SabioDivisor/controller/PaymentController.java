@@ -45,7 +45,7 @@ public class PaymentController {
 
         if (recipientId != null) {//Si se pasa un ID de destinatario, lo agrega al new Payment que va a mandar al formulario.
             AppUser recipient = userService.findById(recipientId);
-            if (recipient != null) {// Si se pasa un ID erroneo por URL, recipient será null.
+            if (recipient != null) {// Si se pasa un ID erróneo por URL, recipient será null.
                 payment.setRecipient(recipient);
                 payment.setPayer(loggedUser); // Establece el pagador como el usuario logueado
             } else {

@@ -39,7 +39,7 @@ public class AppUserController {
     @PostMapping("/save")
     public String save(@ModelAttribute AppUser user, Model model) {
         try{
-            // Validación de campos obligatorios. Tambien se validan en el Service pero lanza excepciones. Evita llamadas innecesarias al Service.
+            // Validación de campos obligatorios. También se validan en el Service pero lanza excepciones. Evita llamadas innecesarias al Service.
             if (user.getEmail() == null || user.getEmail().isBlank()) {
                 model.addAttribute("error", "El email es obligatorio.");
                 model.addAttribute("user", user);
