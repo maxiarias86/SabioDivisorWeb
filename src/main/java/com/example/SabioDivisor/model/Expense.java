@@ -11,6 +11,12 @@ public class Expense extends Transaction {
     private int installments;
     private String description;
 
+    /*
+    La relación entre Expense y Debt es unidireccional desde Debt hacia Expense.
+    No uso la anotación @OneToMany en Expense, por lo tanto no hay borrado en cascada automático.
+    En su lugar, manejo la eliminación manualmente en el ExpenseService, eliminando primero todas las Debt asociadas al Expense antes de eliminar el gasto.
+     */
+
     public Expense() {}
 
     public Expense(double amount, int installments, String description) {

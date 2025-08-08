@@ -6,7 +6,6 @@ import com.example.SabioDivisor.repository.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -18,11 +17,9 @@ public class DebtService {
     @Autowired
     private ExpenseRepository expenseRepository;
 
-    public List<Debt> findAll() {return debtRepository.findAll();}
-
     public Debt save(Debt debt) {
         if(debt.getAmount() <= 0) {
-            throw new IllegalArgumentException("El monto de la deuda debe ser mayor que cero"); // Lanza excepciones que luego seran captadas en el controller.
+            throw new IllegalArgumentException("El monto de la deuda debe ser mayor que cero"); // Lanza excepciones que luego serán captadas en el controller.
         }
         if(debt.getDueDate() == null) {
             throw new IllegalArgumentException("Falta el dueDate del gasto");

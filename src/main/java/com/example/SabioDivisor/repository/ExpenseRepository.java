@@ -1,6 +1,5 @@
 package com.example.SabioDivisor.repository;
 
-import com.example.SabioDivisor.model.AppUser;
 import com.example.SabioDivisor.model.Expense;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

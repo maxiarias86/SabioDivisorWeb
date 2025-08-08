@@ -59,19 +59,15 @@ public class AppUserService {
         }
         AppUser u = findByEmail(email);
         if (u != null) {
-            if (BCrypt.verifyer().verify(password.toCharArray(), u.getPassword()).verified) {
+            if (BCrypt.verifyer().verify(password.toCharArray(), u.getPassword()).verified) {//BCrypt.verifyer().verify() me devuelve un objeto que contiene un atributo de tipo boolean llamado "verified" que indica si la contraseña es correcta o no.
                 return u;
             }
         }
         return null;
     }
 /*
-    public boolean checkPassword(String plainPassword, String hashedPassword) {
-        return BCrypt.verifyer()
-                .verify(plainPassword.toCharArray(), hashedPassword)
-                .verified;
-    }
-
+Cuando el usuario envía el formulario de login, se ejecuta el metodo del LoginController, que llama a AppUserService.validateCredentials().
+Se busca el usuario por email y se valida la contraseña con BCrypt. Si es correcta, se guarda el objeto AppUser en la sesión con session.setAttribute("loggedUser", user). Luego, en cualquier controlador que requiera autenticación, recupero ese usuario con session.getAttribute("loggedUser"). Si no hay usuario logueado, redirijo a la pantalla de login.
  */
 
 

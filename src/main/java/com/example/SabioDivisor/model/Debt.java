@@ -27,7 +27,7 @@ public class Debt {
     private LocalDate dueDate;
     private int installmentNumber;
 
-    public Debt(){}
+    public Debt(){}//Todas las Entitys deben tener un constructor sin parámetros para que JPA pueda instanciarlas.
 
     public Debt(double amount, AppUser debtor, AppUser creditor, Expense expense, LocalDate dueDate, int installmentNumber) {
         setAmount(amount);

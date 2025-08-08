@@ -54,10 +54,14 @@ public class ExpenseController {
     @PostMapping("/save")//Será ejecutado cuando se realice una solicitud HTTP POST a la URL "/expenses/save"
     //En este caso, el formulario es templates/expenses/form.html, y al enviarse con method="post" y th:action="@{/save}", llega a este metodo.
     public String saveExpense(//Devuelve un String porque es el nombre de la vista a mostrar después de guardar el gasto.
-            @ModelAttribute Expense expense, //Anotación para que Spring llene un objeto Expense con los valores del formulario
+            @ModelAttribute Expense expense, //Anotación para que Spring llene un objeto Expense con los valores del formulario. Spring busca en el name="..." de cada campo del formulario y llama automáticamente los setters del modelo.
             Model model,//Es el contenedor de datos que se enviarán a la vista. model.addAttribute("expense", expense); Agrega el objeto Expense al modelo para que esté disponible en la vista. Se le puede pasar mensajes de error, éxito, etc.
             HttpSession session,//HttpSession es una interfaz estándar de Java que permite acceder a la sesión del usuario actual.
-            @RequestParam Map<String, String> params) {//Captura los parámetros del formulario como un Map key-value {"amount":"25000","payer_1":"20000","payer_2:"5000"}.
+            @RequestParam Map<String, String> params) {//Captura todos los parámetros del formulario como un Map key-value {"amount":"25000","payer_1":"20000","payer_2:"5000"}.
+        /*
+        A través del atributo name, Spring vincula los campos del formulario a los atributos del modelo con @ModelAttribute.
+         Si hay inputs adicionales que no pertenecen al modelo, como los pagadores o deudores, los capturo con @RequestParam Map<String, String> y los separo por key-value.
+         */
 
         AppUser loggedUser = (AppUser) session.getAttribute("loggedUser");
         if (loggedUser == null) {

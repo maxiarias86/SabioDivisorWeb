@@ -38,7 +38,7 @@ public class ExpenseService {
     Primero guarda un Expense (expenseRepository.save()). Después borra Debt existentes. Después genera y guarda nuevas Debt (debtRepository.saveAll()).
     Si alguna de esas operaciones falla, en la base de datos no persiste nada.
      */
-    @Transactional//Actua de forma similar al commit false de los DAO. Si no se completa toda la transaccion a la base de datos no se carga la Expense (Por ejemplo si hay un error en la carga de las Debt).
+    @Transactional//Actúa de forma similar al commit false de los DAO. Si no se completa toda la transaccion a la base de datos no se carga la Expense (Por ejemplo si hay un error en la carga de las Debt).
     public Expense save(Expense expense, Map<Long, Double> payers, Map<Long, Double> debtors) {
 
         //VALIDACIONES: Se arrojan en el Service y se catchean en el Controller.
@@ -159,7 +159,7 @@ public class ExpenseService {
         }
         debtRepository.saveAll(debtList);//Guarda todas las Debt generadas.
         /*
-        Si algo falla dado el uso de @Transactional, si alguna linea lanza una excepcion no se guarda ni el Expense ni las Debt.
+        Si algo falla dado el uso de @Transactional, si alguna línea lanza una excepción no se guarda ni el Expense ni las Debt.
         La base de datos queda como estaba. Es como el conn.rollback() de la app de escritorio (DAO).
         */
     return savedExpense;

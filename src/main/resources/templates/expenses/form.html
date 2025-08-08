@@ -52,7 +52,7 @@
                 <div>
                     <h3 class="text-lg font-semibold text-blue-800 mb-2">Cuánto pagó cada uno?</h3>
 
-                    <div class="flex items-center gap-2 mb-4"><!-- Selector + input + botón -->
+                    <div class="flex items-center gap-2 mb-4"><!-- Selector + input + botón que dispara la función JS -->
                         <select id="select-payer" class="bg-gray-100 rounded p-2 flex-1">
                             <option value="" disabled selected>Seleccionar usuario</option>
                             <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}"></option>
@@ -72,7 +72,7 @@
                             <th class="p-2">Acción</th>
                         </tr>
                         </thead>
-                        <tbody id="payer-list"><!-- Se completará dinámicamente con JS y Thymeleaf -->
+                        <tbody id="payer-list"><!-- Parent Object del DOM que se irá llenando con cada list.appendChild(tr) -->
                         <tr th:each="entry : ${payers}" th:id="'row-payer-' + ${entry.key}" class="border-t">
                             <td class="p-2" th:text="${userIdToName[entry.key]}">Usuario</td>
                             <td class="p-2" th:text="${entry.value}">Monto</td>
@@ -82,6 +82,8 @@
                         </tbody>
                     </table>
                 </div>
+
+
 
                 <!-- Sección dinámica de Deudores -->
                 <div class="mt-8">
@@ -97,7 +99,7 @@
                                class="bg-gray-100 rounded p-2 w-32"/>
                         <button type="button"
                                 class="bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-700 transition"
-                                onclick="addEntry('debtor')">
+                                onclick="addEntry('debtor')"><!-- Botón para disparar la función addEntry -->
                             Agregar
                         </button>
                     </div>
@@ -111,7 +113,7 @@
                             <th class="p-2">Acción</th>
                         </tr>
                         </thead>
-                        <tbody id="debtor-list"><!-- Se completará dinámicamente con JS y Thymeleaf -->
+                        <tbody id="debtor-list"><!-- Se completará dinámicamente con JS -->
                         <tr th:each="entry : ${debtors}" th:id="'row-debtor-' + ${entry.key}" class="border-t">
                             <td class="p-2" th:text="${userIdToName[entry.key]}">Usuario</td>
                             <td class="p-2" th:text="${entry.value}">Monto</td>
@@ -160,14 +162,14 @@
                     }
 
                     //Creal la fila (<tr>) de la tabla con los datos del usuario y el monto
-                    const tr = document.createElement("tr");// Crea una nueva fila para la tabla
+                    const tr = document.createElement("tr");// Crea una nueva fila (table row) para la tabla
                     tr.className = "border-t";// Añade una clase Tailwind para el borde
                     tr.id = `row-${type}-${userId}`;// Asigna un ID único a la fila como row-payer-3 o row-debtor-7
                     tr.innerHTML = `
                         <td class="p-2">${userName}</td>
                         <td class="p-2">${amount}</td>
                         <td class="p-2 text-red-600 hover:underline cursor-pointer" onclick="this.parentElement.remove()">Eliminar</td> <!-- Añade una columna para eliminar la fila -->
-                        <input type="hidden" name="${type}_${userId}" value="${amount}"><!-- Añade un input oculto que se envía en el formulario con el nombre payer_3, debtor_7, etc. De esta manera los toma el controller-->
+                        <input type="hidden" name="${type}_${userId}" value="${amount}"><!-- Añade un input oculto que se envía en el formulario con el nombre (key) payer_3, debtor_7, etc. De esta manera los toma el controller-->
                         `;
 
                     list.appendChild(tr);// Añade la nueva fila a la lista
@@ -176,9 +178,6 @@
                     amountInput.value = "";// Resetea el input del monto
                 }
             </script>
-
-
         </main>
-
     </body>
 </html>

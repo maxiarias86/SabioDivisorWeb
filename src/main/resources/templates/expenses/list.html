@@ -19,7 +19,7 @@
     <p th:text="${success}">Mensaje de éxito</p>
   </div>
 
-  <div th:if="${error}" class="text-red-700 p-2 mb-4 text-sm text-center">
+  <div th:if="${error}" class="text-red-700 p-2 mb-4 text-sm text-center"><!-- Muestra este div si hay una variable "error" y no es null -->
     <p th:text="${error}">Mensaje de error</p>
   </div>
 
